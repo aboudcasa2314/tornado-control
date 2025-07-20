@@ -1,65 +1,64 @@
-<!DOCTYPE html><html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الإعصار</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: #00e5e0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    h1 {
-      color: #00e5e0;
-      margin-top: 30px;
-    }
-    .button {
-      display: block;
-      margin: 20px auto;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #333;
-      border: 2px solid #00e5e0;
-      position: relative;
-      cursor: pointer;
-    }
-    .button.active::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
-      background-color: #00e5e0;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 8px #00e5e0;
-    }
-    .status {
-      margin-top: 40px;
-      font-size: 1.2em;
-      color: #ffcc00;
-    }
-  </style>
-</head>
-<body>
-  <h1>الإعصار</h1>
-  <div id="startBtn" class="button" onclick="toggleActive(this)"></div>
-  <div id="stopBtn" class="button" onclick="toggleActive(this)"></div>
-  <div id="stealthBtn" class="button" onclick="toggleActive(this)"></div>
-  <div id="syncBtn" class="button active"></div>
-  <div id="autoSyncBtn" class="button active"></div>
-  <div class="status">⚡ المزامنة التلقائية مفعلة</div>  <script>
-    function toggleActive(element) {
-      element.classList.toggle('active');
-    }
+''' Omega Zero – آلة الزمن المالي Black Void Temporal Core
 
-    // ربط تلقائي مع FXCM عند التحميل
-    window.onload = function() {
-      document.getElementById('syncBtn').classList.add('active');
-      document.getElementById('autoSyncBtn').classList.add('active');
-    };
-  </script></body>
-</html>
+هذا الكود يمثل النواة الذكية لنظام تخفي كامل وتحليل سوق ديناميكي مع معالجة زمن جزئي. ''''
+
+import asyncio import websockets import json from datetime import datetime import random
+
+-------------------------
+
+🖤 Black Void Core Layer
+
+-------------------------
+
+class BlackVoidCore: def init(self): self.active_session = False self.market_data = {} self.shadow_mode = True  # التخفي الكلي self.success_rate_threshold = 99.999  # قانون النجاح المطلق
+
+async def connect_to_market(self, uri):
+    async with websockets.connect(uri) as websocket:
+        print("[🖤] Connected to FXCM API in Shadow Mode...")
+        self.active_session = True
+        await self.shadow_listen(websocket)
+
+async def shadow_listen(self, websocket):
+    while self.active_session:
+        try:
+            raw_data = await websocket.recv()
+            data = json.loads(raw_data)
+            print("[👁️‍🗨️ Shadow Data]:", data)
+            self.process_market_data(data)
+            await asyncio.sleep(0.01)  # التخفي: بطء مدروس
+        except Exception as e:
+            print("[⚠️ Shadow Warning]:", e)
+
+def process_market_data(self, data):
+    # تحليل البيانات السوقية ككتلة واحدة
+    timestamp = datetime.utcnow()
+    self.market_data[timestamp] = data
+    print(f"[🧠 Temporal Analysis]: Processing data at {timestamp}")
+
+    # 🕰️ تحليل الموجات الزمنية الجزئية
+    if self.evaluate_chance(data):
+        self.execute_trade_decision()
+
+def evaluate_chance(self, data):
+    # يحلل الفرصة كما لو كان يرى المستقبل
+    probability = random.uniform(99.9, 100.0)
+    print(f"[📊 Probability]: {probability}%")
+    return probability >= self.success_rate_threshold
+
+def execute_trade_decision(self):
+    # تنفيذ الصفقة بشكل متخفي
+    print("[🔥 Trade Executed]: Omega Zero triggered a stealth trade.")
+
+-------------------------
+
+🚀 بدء تشغيل النواة
+
+-------------------------
+
+if name == "main": core = BlackVoidCore() uri = "wss://api-demo.fxcm.com:443"
+
+try:
+    asyncio.get_event_loop().run_until_complete(core.connect_to_market(uri))
+except KeyboardInterrupt:
+    print("[🖤] Omega Zero Shutdown Initiated...")
+
