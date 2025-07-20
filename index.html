@@ -1,105 +1,65 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>الإعصار</title>
   <style>
     body {
-      background-color: #1e1e1e;
-      color: #00e6e6;
+      background-color: #121212;
+      color: #00e5e0;
       font-family: Arial, sans-serif;
       text-align: center;
-      margin: 0;
-      padding: 0;
     }
     h1 {
-      margin: 20px 0;
-      color: #00e6e6;
-      font-size: 2.5em;
-    }
-    .button-container {
-      position: fixed;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      color: #00e5e0;
+      margin-top: 30px;
     }
     .button {
-      position: relative;
-      width: 50px;
-      height: 50px;
-      background-color: #444;
+      display: block;
+      margin: 20px auto;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background-color: #333;
+      border: 2px solid #00e5e0;
+      position: relative;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-    .button:hover {
-      background-color: #555;
-    }
-    .inner-circle {
+    .button.active::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 20px;
       height: 20px;
-      background-color: #00e6e6;
+      background-color: #00e5e0;
       border-radius: 50%;
-      opacity: 0.2;
-      transition: opacity 0.3s ease, box-shadow 0.3s ease;
-    }
-    .button.active .inner-circle {
-      opacity: 1;
-      box-shadow: 0 0 10px #00e6e6;
-    }
-    .button:active .inner-circle {
-      box-shadow: 0 0 15px #00ffff;
-    }
-    .label {
-      position: absolute;
-      right: 60px;
-      color: #ccc;
-      font-size: 0.9em;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px #00e5e0;
     }
     .status {
-      margin-top: 20px;
-      color: #f5c518;
+      margin-top: 40px;
       font-size: 1.2em;
+      color: #ffcc00;
     }
   </style>
 </head>
 <body>
   <h1>الإعصار</h1>
-  <div class="button-container">
-    <div class="button" id="startButton">
-      <div class="inner-circle"></div>
-      <span class="label">تشغيل الإعصار</span>
-    </div>
-    <div class="button" id="stopButton">
-      <div class="inner-circle"></div>
-      <span class="label">إيقاف الإعصار</span>
-    </div>
-    <div class="button" id="stealthButton">
-      <div class="inner-circle"></div>
-      <span class="label">وضع التخفي</span>
-    </div>
-    <div class="button" id="syncButton">
-      <div class="inner-circle"></div>
-      <span class="label">مزامنة مع FXCM</span>
-    </div>
-    <div class="button active" id="autoSyncButton">
-      <div class="inner-circle"></div>
-      <span class="label">⚡ المزامنة التلقائية</span>
-    </div>
-  </div>
-  <div class="status" id="status">⚡ المزامنة التلقائية مفعلة</div>  <script>
-    const buttons = document.querySelectorAll('.button');
+  <div id="startBtn" class="button" onclick="toggleActive(this)"></div>
+  <div id="stopBtn" class="button" onclick="toggleActive(this)"></div>
+  <div id="stealthBtn" class="button" onclick="toggleActive(this)"></div>
+  <div id="syncBtn" class="button active"></div>
+  <div id="autoSyncBtn" class="button active"></div>
+  <div class="status">⚡ المزامنة التلقائية مفعلة</div>  <script>
+    function toggleActive(element) {
+      element.classList.toggle('active');
+    }
 
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('active');
-      });
-    });
+    // ربط تلقائي مع FXCM عند التحميل
+    window.onload = function() {
+      document.getElementById('syncBtn').classList.add('active');
+      document.getElementById('autoSyncBtn').classList.add('active');
+    };
   </script></body>
 </html>
