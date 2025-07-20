@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖤 Omega Zero – قلعة التخفي</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #00ffcc;
+            animation: pulse 2s infinite;
+        }
+        .status {
+            font-size: 1.2em;
+            margin: 20px;
+            color: #ffcc00;
+        }
+        .log {
+            background-color: #111;
+            color: #0f0;
+            border: 1px solid #333;
+            padding: 15px;
+            margin: 20px auto;
+            width: 80%;
+            height: 200px;
+            overflow-y: scroll;
+            text-align: left;
+        }
+        @keyframes pulse {
+            0% { color: #00ffcc; }
+            50% { color: #ff00ff; }
+            100% { color: #00ffcc; }
+        }
+        button {
+            background: #00ffcc;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #ff00ff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>🖤 Omega Zero – قلعة التخفي</h1>
+    <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
+    <div class="log" id="log">[السجل] بانتظار الاتصال بالقلب...</div>
+    <button onclick="connectToCore()">⚡ بدء تشغيل النواة</button>
 
+    <script>
+        let logBox = document.getElementById("log");
+        let statusBox = document.getElementById("status");
+        let ws;
+
+        function connectToCore() {
+            statusBox.textContent = "🔄 الاتصال بالقلب...";
+            ws = new WebSocket("ws://localhost:8765"); // استبدل بالرابط الفعلي عند تشغيل السيرفر
+            ws.onopen = () => {
+                statusBox.textContent = "✅ متصل بالقلب بنجاح!";
+                log("[🖤] الاتصال بالنواة اكتمل.");
+            };
+            ws.onmessage = (event) => {
+                log(`[💬 بيانات]: ${event.data}`);
+            };
+            ws.onerror = (error) => {
+                statusBox.textContent = "❌ خطأ في الاتصال!";
+                log("[⚠️] خطأ: " + error);
+            };
+            ws.onclose = () => {
+                statusBox.textContent = "🔌 الاتصال مغلق.";
+                log("[🕸️] الاتصال مغلق من القلب.");
+            };
+        }
+
+        function log(message) {
+            logBox.innerHTML += `<div>${message}</div>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
