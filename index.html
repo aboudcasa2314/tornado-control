@@ -1,64 +1,105 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Omega 5 Nanostorm</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    .title {
-      color: #00ffe0;
-      font-size: 2em;
-      margin: 20px 0;
-    }
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      margin: 10px;
-      position: absolute;
-      right: 10px;
-      top: 50px;
-    }
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #555;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      margin: 10px 0;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .btn.active {
-      background-color: #00c853;
-    }
-    .btn:disabled {
-      opacity: 0.4;
-    }
-    #status {
-      color: #ffeb3b;
-      font-size: 1.2em;
-      margin-top: 200px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omega 5 Nanostorm</title>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        .container {
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #00ffe0;
+            margin-bottom: 10px;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        button {
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: #555;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #00bfa5;
+            transform: scale(1.1);
+        }
+        button.active {
+            background-color: #00ffab;
+        }
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #ffcc00;
+        }
+        .toggle-theme {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #888;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        body.light {
+            background-color: #e6e6e6;
+            color: #222;
+        }
+        body.light button {
+            background-color: #aaa;
+            color: #222;
+        }
+        body.light button.active {
+            background-color: #00a896;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-  <div class="title">الإعصار 🌪️</div>
-  <div class="button-container">
-    <button id="startBtn" class="btn" onclick="toggleActive(this)">🚀</button>
-    <button id="stopBtn" class="btn" onclick="toggleActive(this)">⏹️</button>
-    <button id="stealthBtn" class="btn" onclick="toggleActive(this)">😎</button>
-    <button id="syncBtn" class="btn active">🔄</button>
-    <button id="themeBtn" class="btn" onclick="toggleTheme
+    <div class="toggle-theme" onclick="toggleTheme()">🌗 تبديل النمط</div>
+    <div class="container">
+        <h1>الإعصار</h1>
+        <div class="button-group">
+            <button id="start" onclick="toggleButton(this)">🚀</button>
+            <button id="stop" onclick="toggleButton(this)">🛑</button>
+            <button id="stealth" onclick="toggleButton(this)">😎</button>
+            <button id="sync" onclick="toggleButton(this)">🔄</button>
+            <button id="auto-sync" class="active">⚡</button>
+        </div>
+        <div class="status" id="status">🛑 الحالة: متوقف</div>
+    </div><script>
+    function toggleButton(btn) {
+        btn.classList.toggle('active');
+    }
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+    }
+    // المزامنة التلقائية عند التحميل
+    window.onload = function() {
+        document.getElementById("auto-sync").classList.add("active");
+        document.getElementById("status").textContent = "⚡ المزامنة التلقائية مفعلة";
+    }
+</script>
+
+</body>
+</html>
