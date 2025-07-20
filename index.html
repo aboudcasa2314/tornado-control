@@ -2,12 +2,53 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tornado Control</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .activate {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .activate:hover {
+            background-color: #218838;
+        }
+        .deactivate {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .deactivate:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
-<body style="background-color:#000; color:#00FF99; text-align:center; font-family: Arial;">
-    <h1>🌪️ Tornado Control Panel</h1>
-    <p>Welcome to the control interface.</p>
-    <button onclick="alert('✅ Tornado Activated')">Activate Tornado</button>
-    <button onclick="alert('🛑 Tornado Deactivated')">Deactivate Tornado</button>
+<body>
+    <h1>🌀 Tornado Control Panel</h1>
+    <p>Welcome to the advanced control interface.</p>
+    <button class="activate" onclick="alert('✅ Tornado Activated!')">Activate Tornado</button>
+    <button class="deactivate" onclick="alert('🛑 Tornado Deactivated!')">Deactivate Tornado</button>
 </body>
 </html>
