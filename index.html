@@ -1,105 +1,79 @@
 <!DOCTYPE html><html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omega 5 Nanostorm</title>
-    <style>
-        body {
-            background-color: #1c1c1c;
-            color: #e0e0e0;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            direction: rtl;
-        }
-        .container {
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #00ffe0;
-            margin-bottom: 10px;
-        }
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        button {
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            background-color: #555;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        button:hover {
-            background-color: #00bfa5;
-            transform: scale(1.1);
-        }
-        button.active {
-            background-color: #00ffab;
-        }
-        .status {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 18px;
-            color: #ffcc00;
-        }
-        .toggle-theme {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #888;
-            border-radius: 20px;
-            padding: 5px 10px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        body.light {
-            background-color: #e6e6e6;
-            color: #222;
-        }
-        body.light button {
-            background-color: #aaa;
-            color: #222;
-        }
-        body.light button.active {
-            background-color: #00a896;
-            color: #fff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omega 5 Nanostorm</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #00e6e6;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin: 20px 0;
+      font-size: 2.5em;
+      color: #00e6e6;
+    }
+    .button-container {
+      position: fixed;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .button span {
+      margin-left: 60px;
+      font-size: 0.9em;
+      color: #ccc;
+      position: absolute;
+      transform: translateY(-50%);
+    }
+    .button.active {
+      background-color: #00e6e6;
+    }
+    .status {
+      margin-top: 50px;
+      font-size: 1.2em;
+      color: #FFD700;
+    }
+  </style>
 </head>
 <body>
-    <div class="toggle-theme" onclick="toggleTheme()">🌗 تبديل النمط</div>
-    <div class="container">
-        <h1>الإعصار</h1>
-        <div class="button-group">
-            <button id="start" onclick="toggleButton(this)">🚀</button>
-            <button id="stop" onclick="toggleButton(this)">🛑</button>
-            <button id="stealth" onclick="toggleButton(this)">😎</button>
-            <button id="sync" onclick="toggleButton(this)">🔄</button>
-            <button id="auto-sync" class="active">⚡</button>
-        </div>
-        <div class="status" id="status">🛑 الحالة: متوقف</div>
-    </div><script>
-    function toggleButton(btn) {
+  <h1>الإعصار</h1>
+  <div class="button-container">
+    <button class="button" id="start"><span>تشغيل الإعصار</span>🚀</button>
+    <button class="button" id="stop"><span>إيقاف الإعصار</span>🛑</button>
+    <button class="button" id="stealth"><span>وضع التخفي</span>😎</button>
+    <button class="button" id="sync"><span>مزامنة مع FXCM</span>🔄</button>
+    <button class="button active" id="autosync"><span>المزامنة التلقائية</span>⚡</button>
+  </div>
+  <div class="status">⚡ المزامنة التلقائية مفعلة</div>
+  <script>
+    const buttons = document.querySelectorAll('.button');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
         btn.classList.toggle('active');
-    }
-    function toggleTheme() {
-        document.body.classList.toggle('light');
-    }
-    // المزامنة التلقائية عند التحميل
-    window.onload = function() {
-        document.getElementById("auto-sync").classList.add("active");
-        document.getElementById("status").textContent = "⚡ المزامنة التلقائية مفعلة";
-    }
-</script>
-
+      });
+    });
+  </script>
 </body>
 </html>
