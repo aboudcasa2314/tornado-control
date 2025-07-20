@@ -1,108 +1,64 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omega 5 Nanostorm</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: right;
-            padding: 20px;
-        }
-        .title {
-            color: #00ffff;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: #ffffff;
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-        }
-        .button-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            background-color: #555;
-            transition: background-color 0.3s, opacity 0.3s;
-        }
-        .button.active {
-            background-color: #00ff7f;
-        }
-        .button.inactive {
-            opacity: 0.4;
-        }
-        .status {
-            margin-top: 20px;
-            color: #ffd700;
-            font-size: 16px;
-        }
-        .theme-toggle {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Omega 5 Nanostorm</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .title {
+      color: #00ffe0;
+      font-size: 2em;
+      margin: 20px 0;
+    }
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin: 10px;
+      position: absolute;
+      right: 10px;
+      top: 50px;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #555;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin: 10px 0;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .btn.active {
+      background-color: #00c853;
+    }
+    .btn:disabled {
+      opacity: 0.4;
+    }
+    #status {
+      color: #ffeb3b;
+      font-size: 1.2em;
+      margin-top: 200px;
+    }
+  </style>
 </head>
 <body>
-    <div class="title">Omega 5 Nanostorm 🌪️</div>
-    <div class="subtitle">الإعصار</div><div class="button-container">
-    <div class="button-label">
-        <span>🚀 تشغيل الإعصار</span>
-        <button class="button inactive" id="startButton"></button>
-    </div>
-    <div class="button-label">
-        <span>🛑 إيقاف الإعصار</span>
-        <button class="button inactive" id="stopButton"></button>
-    </div>
-    <div class="button-label">
-        <span>😎 وضع التخفي</span>
-        <button class="button inactive" id="stealthButton"></button>
-    </div>
-    <div class="button-label">
-        <span>🔄 مزامنة مع FXCM</span>
-        <button class="button inactive" id="syncButton"></button>
-    </div>
-    <div class="button-label">
-        <span>🌗 تبديل النمط</span>
-        <button class="button inactive" id="themeButton"></button>
-    </div>
-</div>
-
-<div class="status">الحالة: 🛑 متوقف</div>
-
-<script>
-    const buttons = document.querySelectorAll('.button');
-
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            button.classList.toggle('active');
-            button.classList.toggle('inactive');
-        });
-    });
-
-    document.getElementById('syncButton').addEventListener('click', () => {
-        // مزامنة تلقائية
-        console.log('تمت المزامنة تلقائيًا مع FXCM');
-    });
-</script>
-
-</body>
-</html>
+  <div class="title">الإعصار 🌪️</div>
+  <div class="button-container">
+    <button id="startBtn" class="btn" onclick="toggleActive(this)">🚀</button>
+    <button id="stopBtn" class="btn" onclick="toggleActive(this)">⏹️</button>
+    <button id="stealthBtn" class="btn" onclick="toggleActive(this)">😎</button>
+    <button id="syncBtn" class="btn active">🔄</button>
+    <button id="themeBtn" class="btn" onclick="toggleTheme
