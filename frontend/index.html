@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🖤 Omega Zero – قلعة التخفي</title>
+    <title>🖤 Omega Zero – The Castle of Invisibility</title>
     <style>
         body {
             background-color: #000;
@@ -53,32 +53,37 @@
     </style>
 </head>
 <body>
-    <h1>🖤 Omega Zero – قلعة التخفي</h1>
-    <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
-    <div class="log" id="log">[السجل] بانتظار الاتصال بالقلب...</div>
-    <button onclick="connectToCore()">⚡ بدء تشغيل النواة</button>
+    <h1>🖤 Omega Zero – The Castle of Invisibility</h1>
+    <div class="status" id="status">🕸️ Status: Waiting for connection...</div>
+    <div class="log" id="log">[Log] Awaiting backend...</div>
+    <button onclick="connectToBackend()">⚡ Connect to Core</button>
+
     <script>
         let logBox = document.getElementById("log");
         let statusBox = document.getElementById("status");
         let ws;
 
-        function connectToCore() {
-            statusBox.textContent = "🔄 الاتصال بالقلب...";
-            ws = new WebSocket("wss://omega-zero-core.vercel.app"); // مسار القلب المدمج
+        function connectToBackend() {
+            statusBox.textContent = "🔄 Connecting to backend...";
+            ws = new WebSocket("wss://omega-zero-core.vercel.app"); // رابط السيرفر مدمج
+
             ws.onopen = () => {
-                statusBox.textContent = "✅ متصل بالقلب بنجاح!";
-                log("[🖤] الاتصال بالنواة اكتمل.");
+                statusBox.textContent = "✅ Connected to backend!";
+                log("[🖤] Connection to backend established.");
             };
+
             ws.onmessage = (event) => {
-                log(`[💬 بيانات]: ${event.data}`);
+                log(`[💬 Backend]: ${event.data}`);
             };
+
             ws.onerror = (error) => {
-                statusBox.textContent = "❌ خطأ في الاتصال!";
-                log("[⚠️] خطأ: " + error);
+                statusBox.textContent = "❌ Connection error!";
+                log("[⚠️] Error: " + error);
             };
+
             ws.onclose = () => {
-                statusBox.textContent = "🔌 الاتصال مغلق.";
-                log("[🕸️] الاتصال مغلق من القلب.");
+                statusBox.textContent = "🔌 Connection closed.";
+                log("[🕸️] Backend connection closed.");
             };
         }
 
