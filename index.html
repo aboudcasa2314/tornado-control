@@ -1,64 +1,85 @@
-''' Omega Zero – آلة الزمن المالي Black Void Temporal Core
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌀 Omega Zero – The Castle of Innovation</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #00ffcc;
+            animation: pulse 2s infinite;
+        }
+        .status {
+            font-size: 1.2em;
+            margin: 20px;
+            color: #ffcc00;
+        }
+        .log {
+            background-color: #111;
+            color: #0f0;
+            border: 1px solid #333;
+            padding: 15px;
+            margin: 20px auto;
+            width: 80%;
+            height: 200px;
+            overflow-y: scroll;
+            text-align: left;
+        }
+        @keyframes pulse {
+            0% { color: #00ffcc; }
+            50% { color: #ff00ff; }
+            100% { color: #00ffcc; }
+        }
+        button {
+            background-color: #00ffcc;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00cccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌀 Omega Zero: Castle of Innovation</h1>
+    <div class="status">Connecting to server...</div>
+    <div class="log" id="log">Log will appear here...</div>
+    <button onclick="sendTest()">Send Test Command</button>
 
-هذا الكود يمثل النواة الذكية لنظام تخفي كامل وتحليل سوق ديناميكي مع معالجة زمن جزئي. ''''
+    <script>
+        const logBox = document.getElementById('log');
+        const statusBox = document.querySelector('.status');
 
-import asyncio import websockets import json from datetime import datetime import random
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logBox.innerHTML += `[${timestamp}] ${message}<br>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
 
--------------------------
+        function sendTest() {
+            addLog('📡 Sending test command to backend...');
+            // Placeholder for backend interaction
+            setTimeout(() => {
+                addLog('✅ Backend responded: Test successful.');
+            }, 1000);
+        }
 
-🖤 Black Void Core Layer
-
--------------------------
-
-class BlackVoidCore: def init(self): self.active_session = False self.market_data = {} self.shadow_mode = True  # التخفي الكلي self.success_rate_threshold = 99.999  # قانون النجاح المطلق
-
-async def connect_to_market(self, uri):
-    async with websockets.connect(uri) as websocket:
-        print("[🖤] Connected to FXCM API in Shadow Mode...")
-        self.active_session = True
-        await self.shadow_listen(websocket)
-
-async def shadow_listen(self, websocket):
-    while self.active_session:
-        try:
-            raw_data = await websocket.recv()
-            data = json.loads(raw_data)
-            print("[👁️‍🗨️ Shadow Data]:", data)
-            self.process_market_data(data)
-            await asyncio.sleep(0.01)  # التخفي: بطء مدروس
-        except Exception as e:
-            print("[⚠️ Shadow Warning]:", e)
-
-def process_market_data(self, data):
-    # تحليل البيانات السوقية ككتلة واحدة
-    timestamp = datetime.utcnow()
-    self.market_data[timestamp] = data
-    print(f"[🧠 Temporal Analysis]: Processing data at {timestamp}")
-
-    # 🕰️ تحليل الموجات الزمنية الجزئية
-    if self.evaluate_chance(data):
-        self.execute_trade_decision()
-
-def evaluate_chance(self, data):
-    # يحلل الفرصة كما لو كان يرى المستقبل
-    probability = random.uniform(99.9, 100.0)
-    print(f"[📊 Probability]: {probability}%")
-    return probability >= self.success_rate_threshold
-
-def execute_trade_decision(self):
-    # تنفيذ الصفقة بشكل متخفي
-    print("[🔥 Trade Executed]: Omega Zero triggered a stealth trade.")
-
--------------------------
-
-🚀 بدء تشغيل النواة
-
--------------------------
-
-if name == "main": core = BlackVoidCore() uri = "wss://api-demo.fxcm.com:443"
-
-try:
-    asyncio.get_event_loop().run_until_complete(core.connect_to_market(uri))
-except KeyboardInterrupt:
-    print("[🖤] Omega Zero Shutdown Initiated...")
-
+        // Simulate connection
+        setTimeout(() => {
+            statusBox.textContent = "✅ Connected to backend server";
+            addLog('🟢 Connected to backend server successfully.');
+        }, 1500);
+    </script>
+</body>
+</html>
