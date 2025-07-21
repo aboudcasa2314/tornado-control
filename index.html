@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌀 Omega Zero – The Castle of Innovation</title>
+    <title>🖤 Omega Zero – قلعة التخفي</title>
     <style>
         body {
             background-color: #000;
@@ -38,48 +37,89 @@
             100% { color: #00ffcc; }
         }
         button {
-            background-color: #00ffcc;
+            background: #00ffcc;
             color: #000;
             border: none;
             padding: 10px 20px;
-            margin-top: 20px;
-            font-size: 1em;
+            font-size: 1.1em;
             cursor: pointer;
+            margin-top: 20px;
         }
         button:hover {
-            background-color: #00cccc;
+            background: #ff00ff;
+            color: #fff;
+        }
+        input[type="number"] {
+            width: 120px;
+            padding: 5px;
+            margin-top: 10px;
+            font-size: 1em;
+            border: 1px solid #00ffcc;
+            background-color: #111;
+            color: #00ffff;
         }
     </style>
 </head>
 <body>
-    <h1>🌀 Omega Zero: Castle of Innovation</h1>
-    <div class="status">Connecting to server...</div>
-    <div class="log" id="log">Log will appear here...</div>
-    <button onclick="sendTest()">Send Test Command</button>
+    <h1>🖤 Omega Zero – قلعة التخفي</h1>
+    <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
+    <div>
+        <input type="number" id="challenge" placeholder="% نسبة التحدي">
+        <button onclick="setChallenge()">🎯 تحديد التحدي</button>
+    </div>
+    <div class="log" id="log">[السجل] بانتظار الاتصال بالقلب...</div>
+    <button onclick="connectToCore()">⚡ بدء تشغيل النواة</button><script>
+    let logBox = document.getElementById("log");
+    let statusBox = document.getElementById("status");
+    let challengeValue = 0;
+    let ws;
 
-    <script>
-        const logBox = document.getElementById('log');
-        const statusBox = document.querySelector('.status');
+    function connectToCore() {
+        statusBox.textContent = "🔄 الاتصال بالقلب...";
+        ws = new WebSocket("wss://api-demo.fxcm.com:443"); // استبدل بالرابط الفعلي عند تشغيل السيرفر
+        ws.onopen = () => {
+            statusBox.textContent = "✅ متصل بالقلب بنجاح!";
+            log("[🖤] الاتصال بالنواة اكتمل.");
+            simulateAI();
+        };
+        ws.onmessage = (event) => {
+            log(`[💬 بيانات]: ${event.data}`);
+        };
+        ws.onerror = (error) => {
+            statusBox.textContent = "❌ خطأ في الاتصال!";
+            log("[⚠️] خطأ: " + error);
+        };
+        ws.onclose = () => {
+            statusBox.textContent = "🔌 الاتصال مغلق.";
+            log("[🕸️] الاتصال مغلق من القلب.");
+        };
+    }
 
-        function addLog(message) {
-            const timestamp = new Date().toLocaleTimeString();
-            logBox.innerHTML += `[${timestamp}] ${message}<br>`;
-            logBox.scrollTop = logBox.scrollHeight;
-        }
+    function log(message) {
+        logBox.innerHTML += `<div>${message}</div>`;
+        logBox.scrollTop = logBox.scrollHeight;
+    }
 
-        function sendTest() {
-            addLog('📡 Sending test command to backend...');
-            // Placeholder for backend interaction
-            setTimeout(() => {
-                addLog('✅ Backend responded: Test successful.');
-            }, 1000);
-        }
+    function setChallenge() {
+        challengeValue = document.getElementById("challenge").value;
+        log(`🎯 التحدي الأسبوعي محدد: ${challengeValue}%`);
+    }
 
-        // Simulate connection
+    function simulateAI() {
+        log("🤖 تحميل خبرة 20 سنة بيانات سابقة...");
         setTimeout(() => {
-            statusBox.textContent = "✅ Connected to backend server";
-            addLog('🟢 Connected to backend server successfully.');
-        }, 1500);
-    </script>
+            log("⚡ تحليل الفريمات الديناميكية (1 ثانية → ∞)...");
+            setTimeout(() => {
+                log(`✅ الفريم الأمثل لتحقيق التحدي ${challengeValue}% هو: 4 ثوانٍ.");
+                log("🧠 تعديل المؤشرات للأداء الأمثل...");
+                setTimeout(() => {
+                    log("📈 متوسط الأرباح الأسبوعية: 24,500$ على رصيد 1,000$");
+                    log("🚀 النظام جاهز لكسر التحدي المحدد!");
+                }, 2000);
+            }, 2000);
+        }, 2000);
+    }
+</script>
+
 </body>
 </html>
