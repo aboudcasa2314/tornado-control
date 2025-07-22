@@ -1,160 +1,106 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html>
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🖤 Omega Zero – قلعة التخفي</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Omega Zero - النظام الذكي</title>
     <style>
         body {
             background-color: #121212;
-            color: #f0f0f0;
-            font-family: 'Courier New', monospace;
+            color: #00ffe0;
+            font-family: Arial, sans-serif;
             text-align: center;
-            padding: 0;
             margin: 0;
+            padding: 0;
         }
         h1 {
-            color: #00ffee;
+            font-size: 2.5em;
             margin-top: 20px;
+            color: #00ffe0;
         }
         .status {
-            font-size: 1.2em;
-            margin: 10px;
-            color: #cccccc;
+            font-size: 1.3em;
+            margin: 15px 0;
+            color: #ffd700;
         }
         .log {
-            background-color: #1e1e1e;
-            color: #0f0;
-            border: 1px solid #333;
-            padding: 10px;
-            margin: 10px auto;
-            width: 90%;
-            height: 200px;
-            overflow-y: scroll;
-            text-align: left;
+            background: #1e1e1e;
+            color: #00ff88;
+            margin: 20px auto;
+            padding: 15px;
+            width: 80%;
+            height: 250px;
+            overflow-y: auto;
             border-radius: 8px;
+            box-shadow: 0 0 10px #000;
         }
-        .controls {
-            display: flex;
-            justify-content: space-around;
-            margin: 15px;
-        }
-        .button {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #666;
-        }
-        .sidebar {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .sidebar.left {
-            left: 10px;
-        }
-        .sidebar.right {
-            right: 10px;
-        }
-        .sidebar button {
-            background-color: #555;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            font-size: 1em;
-        }
-        .sidebar button:hover {
-            background-color: #777;
+        .loading {
+            color: #888;
+            font-size: 1.1em;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>🖤 Omega Zero – قلعة التخفي</h1>
-    <div class="status" id="status">🕸️ في وضع الاستعداد...</div>
-    <div class="log" id="log">[📜 السجل]: بانتظار تشغيل النواة...</div><div class="controls">
-    <button class="button" onclick="startCore()">⚡</button>
-    <button class="button" onclick="showSpeed()">🚀</button>
-    <button class="button" onclick="showStats()">📊</button>
-    <button class="button" onclick="connectServer()">🌐</button>
-</div>
+    <h1>Omega Zero - النظام الذكي</h1>
+    <div class="status">📡 جاري الاتصال بالسيرفر...</div>
+    <div class="log" id="log">[🔄] بدء الاتصال...</div>
 
-<div class="sidebar left">
-    <button onclick="approveDecision()">✔️</button>
-    <button onclick="rejectDecision()">❌</button>
-</div>
+    <script>
+        const logBox = document.getElementById("log");
+        const statusBox = document.querySelector(".status");
 
-<div class="sidebar right">
-    <button onclick="toggleAI()">🤖</button>
-    <button onclick="challengeMode()">🎯</button>
-</div>
+        let ws;
 
-<script>
-    let logBox = document.getElementById("log");
-    let statusBox = document.getElementById("status");
-    let isConnected = false;
-
-    function log(message) {
-        logBox.innerHTML += `<div>${message}</div>`;
-        logBox.scrollTop = logBox.scrollHeight;
-    }
-
-    function startCore() {
-        statusBox.textContent = "🔄 تشغيل النواة...";
-        setTimeout(() => {
-            isConnected = true;
-            statusBox.textContent = "✅ النواة تعمل بكفاءة";
-            log("[🖤] النواة متصلة وتعمل...");
-        }, 2000);
-    }
-
-    function showSpeed() {
-        log("🚀 السرعة الحالية: 80 نواة ديناميكية");
-    }
-
-    function showStats() {
-        log("📊 عدد الانفجارات المكتشفة: 12");
-        log("📊 عدد صفقات السكالب: 8");
-        log("📈 الأرباح الحالية: +4520$");
-    }
-
-    function connectServer() {
-        if (isConnected) {
-            log("🌐 الاتصال بالسيرفر الخارجي ناجح ✅");
-        } else {
-            log("❌ لا يمكن الاتصال قبل تشغيل النواة!");
+        function log(message) {
+            const entry = document.createElement("div");
+            entry.textContent = message;
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
         }
-    }
 
-    function approveDecision() {
-        log("✔️ تمت الموافقة على القرار المقترح من القلب الذكي.");
-    }
+        function connectToServer() {
+            statusBox.textContent = "📡 جاري الاتصال بالسيرفر...";
+            ws = new WebSocket("wss://api-demo.fxcm.com:443"); // رابط API لـ FXCM
 
-    function rejectDecision() {
-        log("❌ تم رفض القرار وإعادة التحليل.");
-    }
+            ws.onopen = () => {
+                statusBox.textContent = "✅ تم الاتصال بالسيرفر!";
+                log("[✅] الاتصال ناجح، بدأ استقبال البيانات...");
+                ws.send(JSON.stringify({
+                    "method": "login",
+                    "params": {
+                        "username": "اسم_المستخدم",
+                        "password": "كلمة_المرور",
+                        "app": "OmegaZero"
+                    }
+                }));
+            };
 
-    function toggleAI() {
-        log("🤖 الذكاء الاصطناعي في وضع التعلم الذاتي الآن...");
-    }
+            ws.onmessage = (event) => {
+                log(`[📥] البيانات: ${event.data}`);
+            };
 
-    function challengeMode() {
-        let percentage = prompt("🎯 أدخل نسبة التحدي الأسبوعي:");
-        if (percentage) {
-            log(`🎯 التحدي الأسبوعي مضبوط على ${percentage}%`);
+            ws.onerror = (error) => {
+                statusBox.textContent = "❌ حدث خطأ في الاتصال!";
+                log("[⚠️] خطأ: " + error.message);
+                reconnect();
+            };
+
+            ws.onclose = () => {
+                statusBox.textContent = "🔌 الاتصال مغلق، إعادة المحاولة...";
+                log("[🔄] محاولة إعادة الاتصال...");
+                reconnect();
+            };
         }
-    }
-</script>
 
+        function reconnect() {
+            setTimeout(connectToServer, 5000); // إعادة المحاولة بعد 5 ثوانٍ
+        }
+
+        // بدء الاتصال التلقائي عند تحميل الصفحة
+        window.onload = () => {
+            connectToServer();
+        };
+    </script>
 </body>
 </html>
