@@ -1,115 +1,119 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html>
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omega Zero - وضع المحاكاة</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🖤 Omega Zero – قلعة التخفي</title>
     <style>
         body {
-            background-color: #0a0a0a;
-            color: #00ffcc;
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
-            direction: rtl;
-        }
-        .container {
-            border: 1px solid #00ffcc;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px;
             background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding-top: 50px;
         }
-        .summary {
+        h1 {
+            color: #00ffe0;
+            animation: glow 2s infinite alternate;
+        }
+        .status {
             font-size: 1.2em;
-            margin-bottom: 10px;
+            margin: 15px;
+            color: #ffd700;
         }
         .log {
-            text-align: right;
-            background-color: #1a1a1a;
-            padding: 10px;
+            background-color: #1f1f1f;
+            color: #0f0;
+            border: 1px solid #444;
+            padding: 15px;
+            margin: 10px auto;
+            width: 85%;
+            height: 200px;
+            overflow-y: scroll;
+            text-align: left;
             border-radius: 8px;
-            overflow-y: auto;
-            height: 250px;
-            color: #00ff00;
-            font-size: 0.95em;
         }
         .button {
-            background-color: #00ffcc;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin: 5px;
+            background: #333;
+            color: #00ffe0;
+            border: 2px solid #00ffe0;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5em;
+            margin: 10px;
             cursor: pointer;
-            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
         }
         .button:hover {
-            background-color: #00cc99;
+            background: #00ffe0;
+            color: #000;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00ffe0; }
+            to { text-shadow: 0 0 30px #00ffe0; }
+        }
+        .label {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-top: -8px;
         }
     </style>
 </head>
 <body>
-    <h1>🌀 Omega Zero - وضع المحاكاة</h1>
-    <div class="container">
-        <div class="summary">
-            <p>📅 التاريخ: 21/7/2025</p>
-            <p>📊 الزوج: GBP/JPY</p>
-            <p>🔥 السرعة: محسوبة على 8 نوى</p>
-            <p>💼 الرصيد الابتدائي: 1000$</p>
-            <p>📈 الأرباح الكلية: <span id="totalProfit">0$</span></p>
-            <p>📊 عدد الصفقات: <span id="totalTrades">0</span></p>
-        </div>
-        <div class="log" id="log">
-            [⚡] تحميل البيانات الكاملة لمدة 24 ساعة...
-        </div>
-        <button class="button" onclick="startSimulation()">🚀 ابدأ المحاكاة</button>
-        <button class="button" onclick="resetSimulation()">🔄 إعادة تعيين</button>
-    </div><script>
-    let totalProfit = 0;
-    let totalTrades = 0;
-    let interval;
+    <h1>🖤 Omega Zero – قلعة التخفي</h1>
+    <div class="status" id="status">🕸️ الحالة: في وضع الاستعداد...</div>
+    <div class="log" id="log">[السجل] النظام جاهز للاتصال بالسيرفر و FXCM...</div>
 
-    function startSimulation() {
-        document.getElementById('log').innerHTML = '[⚡] بدء المحاكاة...';
-        totalProfit = 0;
-        totalTrades = 0;
-        interval = setInterval(simulateTrade, 500);
-    }
+    <!-- أزرار التحكم -->
+    <div>
+        <button class="button" onclick="connectServer()">S</button>
+        <div class="label">الاتصال بالسيرفر</div>
 
-    function simulateTrade() {
-        if (totalTrades >= 120) { // افتراضيًا 120 صفقة في اليوم
-            clearInterval(interval);
-            document.getElementById('log').innerHTML += '\n✅ انتهت المحاكاة بنجاح.';
-            return;
+        <button class="button" onclick="connectBroker()">B</button>
+        <div class="label">الاتصال بـ FXCM</div>
+
+        <button class="button" onclick="startCore()">⚡</button>
+        <div class="label">تشغيل القلب</div>
+
+        <button class="button" onclick="stopCore()">⛔</button>
+        <div class="label">إيقاف القلب</div>
+    </div>
+
+    <script>
+        let logBox = document.getElementById("log");
+        let statusBox = document.getElementById("status");
+
+        function log(message) {
+            logBox.innerHTML += `<div>${message}</div>`;
+            logBox.scrollTop = logBox.scrollHeight;
         }
 
-        let type = Math.random() > 0.3 ? 'انفجار' : 'سكالب';
-        let profit = Math.floor(Math.random() * 100) + 20;
-        let direction = Math.random() > 0.5 ? 1 : -1;
-        profit = profit * direction;
+        function connectServer() {
+            statusBox.textContent = "🔄 جاري الاتصال بالسيرفر...";
+            setTimeout(() => {
+                statusBox.textContent = "✅ تم الاتصال بالسيرفر بنجاح.";
+                log("[🖤] الاتصال بالسيرفر اكتمل.");
+            }, 1500);
+        }
 
-        totalProfit += profit;
-        totalTrades++;
+        function connectBroker() {
+            statusBox.textContent = "🔄 جاري الاتصال بـ FXCM...";
+            setTimeout(() => {
+                statusBox.textContent = "✅ تم الاتصال بـ FXCM بنجاح.";
+                log("[🖤] الاتصال بالوسيط اكتمل.");
+            }, 2000);
+        }
 
-        let time = new Date(2025, 6, 21, Math.floor(totalTrades / 5), (totalTrades % 5) * 12).toTimeString().substring(0,5);
-        let logEntry = `[${time}] | ${type} | الربح: ${profit}$ | الربح التراكمي: ${totalProfit}$`;
+        function startCore() {
+            statusBox.textContent = "⚡ القلب قيد التشغيل...";
+            log("[🔥] القلب بدأ العمل والتحليل...");
+        }
 
-        let log = document.getElementById('log');
-        log.innerHTML = log.innerHTML + '\n' + logEntry;
-        log.scrollTop = log.scrollHeight;
-
-        document.getElementById('totalProfit').innerText = totalProfit + '$';
-        document.getElementById('totalTrades').innerText = totalTrades;
-    }
-
-    function resetSimulation() {
-        clearInterval(interval);
-        document.getElementById('log').innerHTML = '[⚡] تم إعادة تعيين المحاكاة...';
-        document.getElementById('totalProfit').innerText = '0$';
-        document.getElementById('totalTrades').innerText = '0';
-        totalProfit = 0;
-        totalTrades = 0;
-    }
-</script>
-
+        function stopCore() {
+            statusBox.textContent = "⛔ تم إيقاف القلب.";
+            log("[🛑] القلب توقف عن العمل.");
+        }
+    </script>
 </body>
 </html>
