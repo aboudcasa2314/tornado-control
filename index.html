@@ -1,101 +1,100 @@
 <!DOCTYPE html><html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omega Zero - لوحة التحكم</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #00ffd5;
-            font-family: monospace;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            margin-top: 50px;
-        }
-        button {
-            background-color: #00ffd5;
-            border: none;
-            color: #000;
-            padding: 15px 30px;
-            margin: 10px;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        .status {
-            margin: 20px auto;
-            padding: 10px;
-            color: #0f0;
-            background-color: #111;
-            border-radius: 10px;
-            width: 80%;
-        }
-        .status.error {
-            color: #f00;
-        }
-        .corner {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #00ffd5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            top: 10px;
-        }
-        .corner.left {
-            left: 10px;
-        }
-        .corner.right {
-            right: 10px;
-        }
-        .corner i {
-            font-size: 24px;
-            color: #000;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omega Zero</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #00f5d4;
+      font-family: monospace;
+      text-align: center;
+    }
+    .button {
+      background-color: #888;
+      border: none;
+      color: black;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #aaa;
+    }
+    .status {
+      margin: 20px;
+      color: #0f0;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    input[type=text], input[type=password] {
+      width: 80%;
+      padding: 12px;
+      margin: 10px;
+      border-radius: 6px;
+      border: 1px solid #00f5d4;
+      background: #222;
+      color: #00f5d4;
+      text-align: center;
+    }
+    .top-buttons {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    .icon-button {
+      background-color: #00f5d4;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="corner left">
-        🔒
-    </div>
-    <div class="corner right">
-        ⚙️
-    </div>
-    <div class="container">
-        <h1>Omega Zero</h1>
-        <div id="status" class="status">
-            🟢 النظام جاهز للاتصال بالسيرفر و FXCM...
-        </div>
-        <button onclick="connectServer()">الاتصال بالسيرفر</button>
-        <button onclick="connectFXCM()">الاتصال بـ FXCM</button>
-        <button onclick="startEngine()">تشغيل القلب</button>
-        <button onclick="stopEngine()">إيقاف القلب</button>
-    </div><script>
-    let engineRunning = false;
+  <div class="top-buttons">
+    <div class="icon-button" onclick="openSettings()">⚙️</div>
+    <div class="icon-button" onclick="toggleLock()">🔒</div>
+  </div>
+  <h1>Omega Zero</h1>
+  <div class="status" id="status">💥 النظام جاهز للعمل</div>  <div class="container">
+    <input type="text" id="username" placeholder="اسم المستخدم (FXCM)">
+    <input type="password" id="password" placeholder="كلمة المرور (FXCM)">
+    <input type="text" id="server" placeholder="السيرفر">
+    <input type="text" id="host" placeholder="رابط المضيف"><button class="button" onclick="connectServer()">الاتصال بالسيرفر</button>
+<button class="button" onclick="connectFXCM()">الاتصال بـ FXCM</button>
+<button class="button" onclick="startCore()">تشغيل القلب</button>
+<button class="button" onclick="stopCore()">إيقاف القلب</button>
 
+  </div>  <script>
     function connectServer() {
-        document.getElementById('status').innerText = '✅ الاتصال بالسيرفر اكتمل.';
+      document.getElementById('status').innerText = '✅ الاتصال بالسيرفر اكتمل';
     }
 
     function connectFXCM() {
-        document.getElementById('status').innerText = '✅ الاتصال بالوسيط اكتمل.';
+      document.getElementById('status').innerText = '✅ الاتصال بـ FXCM اكتمل';
     }
 
-    function startEngine() {
-        engineRunning = true;
-        document.getElementById('status').innerText = '🔥 القلب بدأ العمل والتحليل في الخلفية...';
+    function startCore() {
+      document.getElementById('status').innerText = '🔥 القلب بدأ العمل والتحليل في الخلفية';
     }
 
-    function stopEngine() {
-        engineRunning = false;
-        document.getElementById('status').innerText = '⛔ تم إيقاف القلب.';
+    function stopCore() {
+      document.getElementById('status').innerText = '⛔️ تم إيقاف القلب';
     }
-</script>
 
-</body>
+    function openSettings() {
+      alert('🛠️ إعدادات المدخلات جاهزة للتعديل');
+    }
+
+    function toggleLock() {
+      alert('🔒 الحماية مفعلة: الوصول محدود');
+    }
+  </script></body>
 </html>
