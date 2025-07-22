@@ -3,41 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🖤 Omega Zero – قلعة التخفي</title>
+    <title>🖤 Omega Zero - قلعة التخفي</title>
     <style>
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Cairo', sans-serif;
+            background-color: #000;
+            color: #00ffee;
+            font-family: 'Courier New', monospace;
             text-align: center;
-            padding-top: 30px;
+            margin: 0;
+            padding: 0;
         }
         h1 {
-            color: #00ffe0;
-            animation: glow 2s infinite alternate;
+            color: #00ffee;
+            font-size: 2em;
+            margin: 20px 0;
         }
         .status {
-            margin: 20px 0;
+            color: #ffc107;
             font-size: 1.2em;
-            color: #ffd700;
+            margin-bottom: 20px;
         }
-        .panel {
+        .button-panel-right, .button-panel-left {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
-            margin-top: 20px;
+        }
+        .button-panel-right {
+            right: 10px;
+        }
+        .button-panel-left {
+            left: 10px;
         }
         .btn {
+            border: none;
+            border-radius: 50%;
             width: 50px;
             height: 50px;
-            border-radius: 50%;
-            border: none;
+            font-size: 1.2em;
             color: #fff;
-            font-size: 1.1em;
             cursor: pointer;
-            box-shadow: 0 0 10px #000;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s;
         }
         .btn:hover {
             transform: scale(1.1);
@@ -46,86 +54,67 @@
         .green { background-color: #28a745; }
         .yellow { background-color: #ffc107; color: #000; }
         .red { background-color: #dc3545; }
-        .log {
-            background: #1e1e1e;
+        .yes { background-color: #17a2b8; }
+        .no { background-color: #6c757d; }
+        #log {
+            background-color: #111;
+            color: #00ff88;
             border: 1px solid #333;
-            color: #00ff90;
+            border-radius: 8px;
             margin: 20px auto;
-            padding: 10px;
-            width: 80%;
+            width: 90%;
             height: 200px;
-            overflow-y: scroll;
+            overflow-y: auto;
+            padding: 10px;
             text-align: left;
-            font-size: 0.9em;
-        }
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #00ffe0; }
-            to { text-shadow: 0 0 20px #00ffe0, 0 0 30px #00ffe0; }
         }
     </style>
 </head>
 <body>
-    <h1>🖤 Omega Zero – قلعة التخفي</h1>
-    <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
+    <h1>🖤 Omega Zero - قلعة التخفي</h1>
+    <div class="status">🕸️ الحالة: في وضع الانتظار...</div>
 
-    <div class="panel">
-        <button class="btn blue" onclick="connectCore()">⚡</button>
-        <button class="btn green" onclick="showStats()">📊</button>
-        <button class="btn yellow" onclick="setChallenge()">🎯</button>
-        <button class="btn red" onclick="resetCore()">🔄</button>
+    <!-- أزرار التحكم الرئيسية -->
+    <div class="button-panel-right">
+        <button class="btn blue" title="تشغيل النواة ⚡">⚡</button>
+        <button class="btn green" title="عرض الإحصائيات 📊">📊</button>
+        <button class="btn yellow" title="تسجيل التحدي 🎯">🎯</button>
+        <button class="btn red" title="إعادة ضبط النظام 🔄">🔄</button>
     </div>
 
-    <div class="log" id="log">[السجل] بانتظار التشغيل...</div>
+    <!-- أزرار التفاعل (نعم / لا) -->
+    <div class="button-panel-left">
+        <button class="btn yes" title="نعم ✅">✅</button>
+        <button class="btn no" title="لا ❌">❌</button>
+    </div>
+
+    <!-- شاشة العرض -->
+    <div id="log">[💬 بانتظار بدء التشغيل...]</div>
 
     <script>
-        let logBox = document.getElementById("log");
-        let statusBox = document.getElementById("status");
-        let challengeValue = 0;
-
+        const logBox = document.getElementById('log');
         function log(message) {
             logBox.innerHTML += `<div>${message}</div>`;
             logBox.scrollTop = logBox.scrollHeight;
         }
-
-        function connectCore() {
-            statusBox.textContent = "🔄 جاري الاتصال بالقلب...";
-            setTimeout(() => {
-                statusBox.textContent = "✅ متصل بالقلب بنجاح!";
-                log("🖤 الاتصال بالنواة اكتمل.");
-                simulateCore();
-            }, 1500);
-        }
-
-        function simulateCore() {
-            log("🤖 تحميل خبرة 20 سنة من البيانات...");
-            setTimeout(() => {
-                log("⚡ التحليل الموجي الديناميكي قيد التشغيل...");
-                setTimeout(() => {
-                    log(`✅ الفريم الأمثل: 4 ثوانٍ`);
-                    log("📈 متوسط الأرباح الأسبوعية: 42,500$ من رصيد 1,000$");
-                    log("🚀 النظام جاهز لكسر التحدي.");
-                }, 2000);
-            }, 2000);
-        }
-
-        function showStats() {
-            log("📊 عرض الإحصائيات: ");
-            log("💥 انفجارات: 18 | ⚡ سكالب: 32");
-            log("🏆 التحدي الحالي: " + challengeValue + "%");
-            log("💸 إجمالي الأرباح: 24,500$");
-        }
-
-        function setChallenge() {
-            challengeValue = prompt("🎯 أدخل نسبة التحدي الأسبوعي:", "5000");
-            if (challengeValue) {
-                log(`🎯 التحدي الأسبوعي المحدد: ${challengeValue}%`);
-            }
-        }
-
-        function resetCore() {
-            logBox.innerHTML = "[🕸️ السجل تم مسحه]";
-            statusBox.textContent = "🕸️ الحالة: في وضع الانتظار...";
-        }
+        document.querySelector('.blue').onclick = () => {
+            log('⚡ تم بدء تشغيل النواة.');
+        };
+        document.querySelector('.green').onclick = () => {
+            log('📊 عرض الإحصائيات...');
+        };
+        document.querySelector('.yellow').onclick = () => {
+            log('🎯 تم تسجيل التحدي الأسبوعي.');
+        };
+        document.querySelector('.red').onclick = () => {
+            log('🔄 جاري إعادة ضبط النظام...');
+        };
+        document.querySelector('.yes').onclick = () => {
+            log('✅ تم تأكيد الاقتراح.');
+        };
+        document.querySelector('.no').onclick = () => {
+            log('❌ تم رفض الاقتراح.');
+        };
     </script>
 </body>
 </html>
