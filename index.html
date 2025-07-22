@@ -1,89 +1,116 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html><html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>Omega Zero – وضع المحاكاة</title>
-  <style>
-    body { background: #121212; color: #eee; font-family: Arial, sans-serif; text-align:center; margin:0; padding:20px; }
-    .card { border:1px solid #444; background:#1c1c1c; padding:15px; margin:20px auto; max-width:400px; border-radius:8px; }
-    .btn { background:#444; color:#fff; border:none; padding:10px 20px; margin:5px; border-radius:5px; cursor:pointer; }
-    .btn:hover { background:#666; }
-    .log { background:#111; color:#0f0; height:200px; overflow:auto; padding:10px; font-size:13px; text-align:left; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omega Zero – وضع المحاكاة</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #00f0c0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            direction: rtl;
+        }
+        .status {
+            color: #ffcc00;
+            margin: 15px;
+        }
+        .box {
+            border: 1px solid #00f0c0;
+            padding: 15px;
+            margin: 15px auto;
+            width: 300px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+        }
+        .button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #555;
+        }
+        .log {
+            background-color: #000;
+            color: #00ff00;
+            font-size: 14px;
+            margin: 10px;
+            padding: 10px;
+            height: 200px;
+            overflow-y: scroll;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-
-  <h1>Omega Zero – وضع المحاكاة</h1>
-  <div class="card">
-    <p>💠 الحالة: <span id="status">بانتظار بدء المحاكاة...</span></p>
-    <p>📊 عدد الصفقات: <span id="trades">0</span></p>
-    <p>💵 الأرباح الكلية: <span id="profit">0</span> $</p>
-    <p>🔥 السرعة: <span id="speed">100</span></p>
-    <div>
-      <button class="btn" onclick="connect()">اتصال</button>
-      <button class="btn" onclick="startSim()">بدء</button>
-      <button class="btn" onclick="stopSim()">إيقاف</button>
-      <button class="btn" onclick="resetSim()">إعادة</button>
+    <h1>Omega Zero – وضع المحاكاة</h1>
+    <div class="status">⚡ الحالة: في وضع المحاكاة...</div>
+    <div class="box">
+        <div>عدد الصفقات: <span id="trades">0</span></div>
+        <div>💵 الأرباح الكلية: <span id="profit">0</span> $</div>
+        <div>🔥 السرعة: <span id="speed">100</span></div>
+        <div>💼 الرصيد الحالي: <span id="balance">1000</span> $</div>
+        <div>📍 قيمة النقطة: <span id="pipValue">8</span> $</div>
     </div>
-    <div class="log" id="log">📥 سجل المحاكاة جاهز...</div>
-  </div>
+    <button class="button" onclick="startSimulation()">▶️ ابدأ المحاكاة</button>
+    <button class="button" onclick="stopSimulation()">⏸️ إيقاف</button>
+    <button class="button" onclick="resetSimulation()">🔄 إعادة</button><div class="log" id="log">[💻] بانتظار بدء المحاكاة...
+</div>
 
-  <script>
-    let connected = false, running = false, trades = 0, profit = 0;
-    const logEl = document.getElementById('log');
+<script>
+    let balance = 1000;
+    let pipValue = 8;
+    let trades = 0;
+    let profit = 0;
+    let interval;
 
-    const priceData = [198.80, 198.92, 199.12, 198.65, 199.30, 199.10, 198.95, 199.50, 198.40]; // بيانات يوم 21-7-2025
-
-    function connect() {
-      connected = true;
-      document.getElementById('status').innerText = "✅ تم الاتصال بالمحاكاة";
-      appendLog("✅ النظام متصل وجاهز.");
+    function logMessage(message) {
+        const logBox = document.getElementById('log');
+        logBox.innerHTML += `<br>${message}`;
+        logBox.scrollTop = logBox.scrollHeight;
     }
 
-    function startSim() {
-      if (!connected) {
-        appendLog("⚠️ يجب الاتصال أولاً قبل البدء.");
-        return;
-      }
-      if (running) return;
-      running = true;
-      appendLog("▶️ بدء تشغيل المحاكاة...");
-      simulate();
-    }
-
-    function stopSim() {
-      if (!running) return;
-      running = false;
-      appendLog("⏸️ تم إيقاف المحاكاة.");
-    }
-
-    function resetSim() {
-      running = false;
-      trades = 0; profit = 0;
-      document.getElementById('trades').innerText = trades;
-      document.getElementById('profit').innerText = profit;
-      appendLog("🔄 تمت إعادة المحاكاة.");
-    }
-
-    async function simulate() {
-      for (let price of priceData) {
-        if (!running) break;
-        await new Promise(r => setTimeout(r, 1000)); // الانتظار ثانية بين كل خطوة
-        let tradeProfit = (Math.random() * 50 - 25).toFixed(2);
-        profit += parseFloat(tradeProfit);
-        trades += 1;
+    function updateUI() {
+        document.getElementById('balance').innerText = balance.toFixed(2);
+        document.getElementById('pipValue').innerText = pipValue.toFixed(2);
         document.getElementById('trades').innerText = trades;
         document.getElementById('profit').innerText = profit.toFixed(2);
-        appendLog(`📈 صفقة جديدة عند السعر ${price} | ربح: ${tradeProfit}$`);
-      }
-      if (running) appendLog("✅ انتهت محاكاة اليوم بالكامل.");
-      running = false;
     }
 
-    function appendLog(text) {
-      logEl.innerHTML += text + "<br>";
-      logEl.scrollTop = logEl.scrollHeight;
+    function startSimulation() {
+        logMessage('[⚡] بدء المحاكاة...');
+        interval = setInterval(() => {
+            let tradeProfit = (Math.random() * 10 - 2) * pipValue; // ربح أو خسارة عشوائية لكل صفقة
+            balance += tradeProfit;
+            profit += tradeProfit;
+            trades++;
+            pipValue = (balance / 1000) * 8; // تحديث قيمة النقطة ديناميكياً
+            updateUI();
+            logMessage(`[📊] صفقة جديدة | الرصيد: ${balance.toFixed(2)} $ | الأرباح: ${profit.toFixed(2)} $`);
+        }, 500);
     }
-  </script>
+
+    function stopSimulation() {
+        clearInterval(interval);
+        logMessage('[⏸️] تم إيقاف المحاكاة.');
+    }
+
+    function resetSimulation() {
+        clearInterval(interval);
+        balance = 1000;
+        pipValue = 8;
+        trades = 0;
+        profit = 0;
+        updateUI();
+        document.getElementById('log').innerHTML = '[💻] تمت إعادة ضبط المحاكاة...';
+    }
+</script>
+
 </body>
 </html>
