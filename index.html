@@ -2,94 +2,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قلعة Omega Zero - التخفي</title>
+    <title>🖤 Omega Zero – قلعة التخفي</title>
     <style>
         body {
-            background-color: #111;
-            color: #0ff;
+            background-color: #121212;
+            color: #f0f0f0;
             font-family: 'Courier New', monospace;
             text-align: center;
-            margin: 0;
             padding: 0;
+            margin: 0;
         }
         h1 {
-            color: #00ffff;
+            color: #00ffee;
             margin-top: 20px;
-        }
-        h2 {
-            color: #00ff99;
         }
         .status {
-            color: #ffaa00;
             font-size: 1.2em;
             margin: 10px;
+            color: #cccccc;
         }
-        .log-box {
-            background-color: #222;
+        .log {
+            background-color: #1e1e1e;
             color: #0f0;
-            border: 1px solid #0ff;
-            border-radius: 8px;
-            width: 80%;
-            margin: 10px auto;
+            border: 1px solid #333;
             padding: 10px;
-            min-height: 150px;
+            margin: 10px auto;
+            width: 90%;
+            height: 200px;
+            overflow-y: scroll;
             text-align: left;
-            overflow-y: auto;
+            border-radius: 8px;
         }
-        .button-bar {
+        .controls {
             display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
+            justify-content: space-around;
+            margin: 15px;
         }
-        .btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
+        .button {
+            background-color: #444;
             color: #fff;
-            font-size: 1.5em;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        .btn-on { background-color: #00cccc; }
-        .btn-server { background-color: #555; }
-        .btn-stats { background-color: #555; }
-        .btn-challenge { background-color: #555; }
-        .btn-reset { background-color: #555; }
-        .btn-confirm { background-color: #2ecc71; font-size: 1.2em; }
-        .btn-cancel { background-color: #e74c3c; font-size: 1.2em; }
-        .side-buttons {
+        .button:hover {
+            background-color: #666;
+        }
+        .sidebar {
             position: fixed;
-            left: 10px;
-            top: 150px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
+        .sidebar.left {
+            left: 10px;
+        }
+        .sidebar.right {
+            right: 10px;
+        }
+        .sidebar button {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 1em;
+        }
+        .sidebar button:hover {
+            background-color: #777;
+        }
     </style>
 </head>
 <body>
-    <h1>قلعة Omega Zero - التخفي</h1>
-    <div class="status">🕸️ الحالة: في وضع الانتظار...</div>
-    <div class="log-box" id="log">[✅] بانتظار الاتصال بالقلب...</div><div class="button-bar">
-    <button class="btn btn-on" onclick="startCore()">⚡</button>
-    <button class="btn btn-server" onclick="showServerStatus()">🌐</button>
-    <button class="btn btn-stats" onclick="showStats()">📊</button>
-    <button class="btn btn-challenge" onclick="setChallenge()">🎯</button>
-    <button class="btn btn-reset" onclick="resetSystem()">🔄</button>
+    <h1>🖤 Omega Zero – قلعة التخفي</h1>
+    <div class="status" id="status">🕸️ في وضع الاستعداد...</div>
+    <div class="log" id="log">[📜 السجل]: بانتظار تشغيل النواة...</div><div class="controls">
+    <button class="button" onclick="startCore()">⚡</button>
+    <button class="button" onclick="showSpeed()">🚀</button>
+    <button class="button" onclick="showStats()">📊</button>
+    <button class="button" onclick="connectServer()">🌐</button>
 </div>
 
-<div class="side-buttons">
-    <button class="btn btn-confirm" onclick="confirmAction()">✔</button>
-    <button class="btn btn-cancel" onclick="cancelAction()">✖</button>
+<div class="sidebar left">
+    <button onclick="approveDecision()">✔️</button>
+    <button onclick="rejectDecision()">❌</button>
+</div>
+
+<div class="sidebar right">
+    <button onclick="toggleAI()">🤖</button>
+    <button onclick="challengeMode()">🎯</button>
 </div>
 
 <script>
     let logBox = document.getElementById("log");
+    let statusBox = document.getElementById("status");
+    let isConnected = false;
 
     function log(message) {
         logBox.innerHTML += `<div>${message}</div>`;
@@ -97,40 +110,49 @@
     }
 
     function startCore() {
-        log("⚡ تشغيل النواة... جارٍ الاتصال بالسيرفر...");
+        statusBox.textContent = "🔄 تشغيل النواة...";
         setTimeout(() => {
-            log("✅ النواة بدأت العمل... النظام متصل الآن.");
+            isConnected = true;
+            statusBox.textContent = "✅ النواة تعمل بكفاءة";
+            log("[🖤] النواة متصلة وتعمل...");
         }, 2000);
     }
 
-    function showServerStatus() {
-        log("🌐 تحقق من حالة السيرفر... الاتصال مستقر.");
+    function showSpeed() {
+        log("🚀 السرعة الحالية: 80 نواة ديناميكية");
     }
 
     function showStats() {
-        log("📊 عرض الإحصائيات: \n الأرباح: $0 \n الانفجارات: 0 \n السكالب: 0");
+        log("📊 عدد الانفجارات المكتشفة: 12");
+        log("📊 عدد صفقات السكالب: 8");
+        log("📈 الأرباح الحالية: +4520$");
     }
 
-    function setChallenge() {
-        let challenge = prompt("أدخل نسبة التحدي الأسبوعي %:");
-        if (challenge) {
-            log(`🎯 تم تسجيل التحدي الأسبوعي: ${challenge}%`);
+    function connectServer() {
+        if (isConnected) {
+            log("🌐 الاتصال بالسيرفر الخارجي ناجح ✅");
+        } else {
+            log("❌ لا يمكن الاتصال قبل تشغيل النواة!");
         }
     }
 
-    function resetSystem() {
-        log("🔄 جاري إعادة ضبط النظام...");
-        setTimeout(() => {
-            log("✅ تمت إعادة ضبط النظام بنجاح.");
-        }, 1500);
+    function approveDecision() {
+        log("✔️ تمت الموافقة على القرار المقترح من القلب الذكي.");
     }
 
-    function confirmAction() {
-        log("✅ تم تأكيد الأمر.");
+    function rejectDecision() {
+        log("❌ تم رفض القرار وإعادة التحليل.");
     }
 
-    function cancelAction() {
-        log("❌ تم إلغاء الأمر.");
+    function toggleAI() {
+        log("🤖 الذكاء الاصطناعي في وضع التعلم الذاتي الآن...");
+    }
+
+    function challengeMode() {
+        let percentage = prompt("🎯 أدخل نسبة التحدي الأسبوعي:");
+        if (percentage) {
+            log(`🎯 التحدي الأسبوعي مضبوط على ${percentage}%`);
+        }
     }
 </script>
 
