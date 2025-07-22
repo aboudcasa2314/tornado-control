@@ -1,120 +1,117 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🖤 Omega Zero – قلعة التخفي</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #00ffff;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            padding-top: 30px;
-        }
-        h1 {
-            color: #00ffcc;
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        .status {
-            font-size: 1.2em;
-            margin: 10px;
-            color: #ffcc00;
-        }
-        .log {
-            background-color: #111;
-            color: #0f0;
-            border: 1px solid #333;
-            padding: 10px;
-            margin: 10px auto;
-            width: 90%;
-            height: 300px;
-            overflow-y: scroll;
-            text-align: left;
-        }
-        button {
-            background: #444;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            margin: 5px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #00ffcc;
-            color: #000;
-        }
-        .counter {
-            margin-top: 10px;
-            font-size: 1.1em;
-            color: #ffcc00;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Omega Zero – وضع المحاكاة</title>
+  <style>
+    body { background:#111; color:#0ff; font-family:monospace; padding:0; margin:0; }
+    .container { padding:16px; }
+    h1 { text-align:center; margin:0; font-size:1.6rem; }
+    .status { text-align:center; color:#ff0; margin:8px 0; }
+    .panel { border:1px solid #0ff; padding:12px; margin:12px 0; }
+    .btns { display:flex; justify-content:center; gap:12px; margin:12px 0; }
+    .btn { background:#333; color:#0ff; border:none; padding:10px 16px; font-size:1rem; cursor:pointer; }
+    .btn:hover { background:#444; }
+    pre { background:#000; color:#0f0; height:200px; overflow:auto; padding:8px; }
+  </style>
 </head>
 <body>
-    <h1>🖤 Omega Zero – قلعة التخفي</h1>
-    <div class="status" id="status">🕸️ الحالة: محاكاة يوم كامل قيد التشغيل...</div>
-    <div class="log" id="log">[📅 تحميل بيانات GBP/JPY ليوم 21/7/2025 ...]</div><div class="counter" id="counter">📈 الأرباح: $0 | 💥 عدد الصفقات: 0</div>
+<div class="container">
+  <h1>Omega Zero – وضع المحاكاة</h1>
+  <div class="status" id="status">الحالة… في انتظار المحاكاة ⚡</div>
 
-<button onclick="startSimulation()">⚡ بدء المحاكاة</button>
-<button onclick="resetSimulation()">🔄 إعادة تعيين</button>
+  <div class="panel">
+    <div>🧮 عدد الصفقات: <span id="count">0</span></div>
+    <div>💰 الأرباح الكلّيّة: $<span id="profit">0</span></div>
+    <div>📦 الرصيد الحالي: $<span id="balance">1000</span></div>
+    <div>📍 نقاط محققة: <span id="points">0</span></div>
+    <div>🔥 سرعة المحاكاة: 8 أنوية (واقعيّة)</div>
+  </div>
+
+  <div class="btns">
+    <button class="btn" id="start">▶️ ابدأ المحاكاة</button>
+    <button class="btn" id="stop">⏸️ إيقاف</button>
+    <button class="btn" id="reset">🔄 إعادة تعيين</button>
+  </div>
+
+  <pre id="log">…بانتظار بدء المحاكاة [السجل]</pre>
+</div>
 
 <script>
-    let logBox = document.getElementById("log");
-    let counterBox = document.getElementById("counter");
-    let statusBox = document.getElementById("status");
-    let profit = 0;
-    let trades = 0;
-    let timer;
-    let data = [
-        {time: "03:00", type: "انفجار", result: 120},
-        {time: "03:04", type: "سكالب", result: 35},
-        {time: "03:07", type: "انفجار", result: 210},
-        {time: "03:11", type: "سكالب", result: -40},
-        {time: "03:15", type: "انفجار", result: 150},
-        {time: "03:20", type: "سكالب", result: 50},
-        {time: "03:25", type: "انفجار", result: 300},
-        {time: "03:31", type: "سكالب", result: 20},
-        {time: "03:37", type: "انفجار", result: -60},
-        {time: "03:44", type: "سكالب", result: 80},
-        // ... بيانات محاكاة اليوم كاملًا حتى 17:00
-    ];
+(() => {
+  const log = document.getElementById('log');
+  const start = document.getElementById('start');
+  const stop  = document.getElementById('stop');
+  const reset = document.getElementById('reset');
+  const status= document.getElementById('status');
+  const cnt  = document.getElementById('count');
+  const prf  = document.getElementById('profit');
+  const bal  = document.getElementById('balance');
+  const pts  = document.getElementById('points');
 
-    function startSimulation() {
-        statusBox.textContent = "✅ تشغيل المحاكاة: يوم 21/7/2025";
-        log("[🚀] بدأ قراءة وتحليل البيانات...");
-        let index = 0;
-        timer = setInterval(() => {
-            if (index < data.length) {
-                let trade = data[index];
-                trades++;
-                profit += trade.result;
-                log(`[${trade.time}] ${trade.type} | ${trade.result}$ | الربح التراكمي: ${profit}$`);
-                counterBox.textContent = `📈 الأرباح: $${profit} | 💥 عدد الصفقات: ${trades}`;
-                index++;
-            } else {
-                clearInterval(timer);
-                log("[✅] انتهت المحاكاة ليوم كامل.");
-                statusBox.textContent = "🕸️ الحالة: انتهت المحاكاة بنجاح ✅";
-            }
-        }, 500); // سرعة عرض الصفقة كل نصف ثانية
-    }
+  let data = []; // بيانات ليوم 21/7/2025 بكل دقة
+  let idx = 0, timer=null;
+  let balance = 1000, profit = 0, totalPoints = 0, trades=0;
 
-    function resetSimulation() {
-        clearInterval(timer);
-        profit = 0;
-        trades = 0;
-        counterBox.textContent = "📈 الأرباح: $0 | 💥 عدد الصفقات: 0";
-        logBox.innerHTML = "[📅 تحميل بيانات GBP/JPY ليوم 21/7/2025 ...]";
-        statusBox.textContent = "🕸️ الحالة: محاكاة يوم كامل قيد التشغيل...";
-    }
+  // ————— بيانات وهمية كمثال — يجب استبدالها بالبيانات الحقيقية الدقيقة للزوج GBP/JPY لذلك اليوم:
+  data = [
+    {time:'03:00', type:'انفجار', pts:15, $:120},
+    {time:'03:04', type:'سكالب', pts:7,  $:35},
+    {time:'03:07', type:'انفجار', pts:21, $:210},
+    {time:'03:11', type:'سكالب', pts:-5, $:-40},
+    {time:'03:15', type:'انفجار', pts:15, $:150},
+    {time:'03:20', type:'سكالب', pts:5,  $:50},
+    {time:'03:25', type:'انفجار', pts:30, $:300},
+    {time:'03:31', type:'سكالب', pts:2,  $:20},
+    {time:'03:37', type:'انفجار', pts:6,  $:60},
+    {time:'03:45', type:'سكالب', pts: -10, $:-100}
+    // … بيانات متبقية ليوم كامل
+  ];
 
-    function log(message) {
-        logBox.innerHTML += `<div>${message}</div>`;
-        logBox.scrollTop = logBox.scrollHeight;
+  function updateUI() {
+    cnt.textContent = trades;
+    prf.textContent = profit.toFixed(2);
+    balance = 1000 + profit;
+    bal.textContent = balance.toFixed(2);
+    pts.textContent = totalPoints;
+  }
+
+  function logTrade(d) {
+    log.textContent += `[${d.time}] – ${d.type} | نقاط: ${d.pts} | +$${d.$}\n`;
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function step() {
+    if (idx >= data.length) {
+      clearInterval(timer);
+      status.textContent = 'الحالة ✅ انتهت المحاكاة بنجاح';
+      return;
     }
+    const d = data[idx++];
+    trades++;
+    profit += d.$;
+    totalPoints += d.pts;
+    updateUI();
+    logTrade(d);
+  }
+
+  start.onclick = () => {
+    if (timer) return;
+    status.textContent = '🔄 المحاكاة جارية...';
+    timer = setInterval(step, 1000 / 8); // سرعة 8 نواه
+  };
+  stop.onclick = () => {
+    clearInterval(timer); timer = null;
+    status.textContent = '⏸️ المحاكاة متوقفة';
+  };
+  reset.onclick = () => {
+    clearInterval(timer); timer = null;
+    trades=0; profit=0; totalPoints=0; idx=0;
+    log.textContent = '…بانتظار بدء المحاكاة [السجل]\n';
+    status.textContent = '⚡ في انتظار المحاكاة';
+    updateUI();
+  };
+
+  updateUI();
+})();
 </script>
-
-</body>
-</html>
