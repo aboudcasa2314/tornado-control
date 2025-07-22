@@ -1,127 +1,137 @@
 <!DOCTYPE html><html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omega Zero - قلعة التخفي</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #0ff;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            font-size: 2em;
-            margin: 20px 0 5px;
-        }
-        h2 {
-            font-size: 1.5em;
-            margin: 5px 0 20px;
-        }
-        .status {
-            color: #ffcc00;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-        .screen {
-            border: 1px solid #0ff;
-            margin: 20px auto;
-            padding: 10px;
-            width: 80%;
-            height: 200px;
-            color: #0f0;
-            overflow-y: auto;
-        }
-        .buttons-right, .buttons-left {
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .buttons-right {
-            right: 10px;
-            top: 30%;
-        }
-        .buttons-left {
-            left: 10px;
-            top: 30%;
-        }
-        .btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            color: #fff;
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-        .btn-blue { background-color: #007bff; }
-        .btn-green { background-color: #28a745; }
-        .btn-yellow { background-color: #ffc107; }
-        .btn-red { background-color: #dc3545; }
-        .btn-yes { background-color: #28a745; }
-        .btn-no { background-color: #dc3545; }
-        .small-text {
-            font-size: 0.8em;
-            color: #ccc;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قلعة Omega Zero - التخفي</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0ff;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin: 20px 0 10px;
+      color: #00ffff;
+    }
+    h2 {
+      font-size: 1.8em;
+      color: #00ff99;
+    }
+    .status {
+      color: #ffcc00;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+    .log-box {
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      padding: 10px;
+      width: 90%;
+      max-width: 600px;
+      margin: 10px auto;
+      text-align: left;
+      background-color: #111;
+      color: #0f0;
+      overflow-y: auto;
+      height: 200px;
+    }
+    .button-panel {
+      position: fixed;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .button-panel button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 1.4em;
+      cursor: pointer;
+      box-shadow: 0 0 10px #333;
+    }
+    .btn-start { background-color: #007bff; }
+    .btn-stats { background-color: #28a745; }
+    .btn-challenge { background-color: #ffc107; }
+    .btn-reset { background-color: #dc3545; }
+    .confirm-panel {
+      position: fixed;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .confirm-panel button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 1.6em;
+      cursor: pointer;
+      box-shadow: 0 0 10px #333;
+    }
+    .btn-yes { background-color: #28a745; }
+    .btn-no { background-color: #dc3545; }
+  </style>
 </head>
 <body>
-    <h1>Omega Zero - قلعة التخفي</h1>
-    <h2 class="status">🕸️ الحالة: في وضع الانتظار...</h2><div class="screen" id="log">
-    [ ⚡ بانتظار تشغيل النواة... ]
-</div>
-
-<div class="buttons-right">
-    <button class="btn btn-blue" onclick="startCore()">⚡<div class="small-text">تشغيل</div></button>
-    <button class="btn btn-green" onclick="showStats()">📊<div class="small-text">الإحصائيات</div></button>
-    <button class="btn btn-yellow" onclick="setChallenge()">🎯<div class="small-text">التحدي</div></button>
-    <button class="btn btn-red" onclick="resetSystem()">🔄<div class="small-text">إعادة ضبط</div></button>
-</div>
-
-<div class="buttons-left">
-    <button class="btn btn-yes" onclick="confirmAction('yes')">✔</button>
-    <button class="btn btn-no" onclick="confirmAction('no')">✖</button>
-</div>
-
-<script>
+  <h1>قلعة Omega Zero - التخفي</h1>
+  <h2>🕸️ الحالة: في وضع الانتظار...</h2>  <div class="log-box" id="log">
+    [⚡] بانتظار تشغيل النواة...
+  </div>  <div class="button-panel">
+    <button class="btn-start" onclick="startCore()">⚡</button>
+    <button class="btn-stats" onclick="showStats()">📊</button>
+    <button class="btn-challenge" onclick="setChallenge()">🎯</button>
+    <button class="btn-reset" onclick="resetSystem()">🔄</button>
+  </div>  <div class="confirm-panel">
+    <button class="btn-yes" onclick="confirmAction(true)">✔</button>
+    <button class="btn-no" onclick="confirmAction(false)">✖</button>
+  </div>  <script>
     let logBox = document.getElementById("log");
+    let challengeValue = 0;
 
     function log(message) {
-        logBox.innerHTML += `<div>${message}</div>`;
-        logBox.scrollTop = logBox.scrollHeight;
+      logBox.innerHTML += `<div>${message}</div>`;
+      logBox.scrollTop = logBox.scrollHeight;
     }
 
     function startCore() {
-        log("✅ النواة بدأت العمل... النظام الآن متصل بالسيرفر.");
+      log("✅ النواة بدأت العمل... النظام الآن متصل بالسيرفر.");
+      log("📈 الأرباح التراكمية: $0 | 💥 الانفجارات: 0 | ⚡ السكالب: 0");
     }
 
     function showStats() {
-        log("📈 الأرباح التراكمية: 0$ | 💥 الانفجارات: 0 | ⚡ السكالب: 0");
+      log("📊 عرض الإحصائيات الكاملة...");
     }
 
     function setChallenge() {
-        let challenge = prompt("🎯 أدخل نسبة التحدي الأسبوعي:");
-        if (challenge) {
-            log(`🎯 التحدي الأسبوعي محدد: ${challenge}%`);
-        }
+      challengeValue = prompt("🎯 أدخل نسبة التحدي الأسبوعي:");
+      if (challengeValue) {
+        log(`🎯 التحدي الأسبوعي محدد: ${challengeValue}%`);
+      }
     }
 
     function resetSystem() {
-        log("🔄 تم إعادة ضبط النظام بنجاح.");
+      log("🔄 تم إعادة ضبط النظام بنجاح.");
     }
 
-    function confirmAction(response) {
-        if (response === 'yes') {
-            log("✅ تم تأكيد الأمر.");
-        } else {
-            log("❌ تم إلغاء الأمر.");
-        }
+    function confirmAction(isConfirmed) {
+      if (isConfirmed) {
+        log("✔ تم تأكيد الأمر.");
+      } else {
+        log("✖ تم إلغاء الأمر.");
+      }
     }
-</script>
-
-</body>
+  </script></body>
 </html>
