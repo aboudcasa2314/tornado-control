@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🖤 Omega Zero – قلعة التخفي</title>
     <style>
         body {
-            background-color: #0d0d0d;
-            color: #00ffff;
+            background-color: #000;
+            color: #f0f0f0; /* أبيض بارد */
             font-family: 'Courier New', monospace;
             text-align: center;
-            padding: 40px 10px;
+            padding-top: 50px;
         }
         h1 {
-            color: #00ffcc;
-            animation: glow 2s infinite alternate;
+            color: #ccc; /* رمادي بارد */
+            animation: pulse 2s infinite;
         }
         .status {
-            margin-top: 20px;
             font-size: 1.2em;
-            color: #ffcc00;
+            margin: 20px;
+            color: #00cc99;
         }
         .log {
             background-color: #111;
@@ -27,118 +27,113 @@
             border: 1px solid #333;
             padding: 15px;
             margin: 20px auto;
-            width: 90%;
-            height: 250px;
+            width: 80%;
+            height: 200px;
             overflow-y: scroll;
             text-align: left;
-            border-radius: 10px;
+        }
+        @keyframes pulse {
+            0% { color: #ccc; }
+            50% { color: #00cc99; }
+            100% { color: #ccc; }
         }
         button {
-            background: #00ffaa;
+            background: #00cc99;
             color: #000;
             border: none;
             padding: 10px 20px;
-            margin: 10px;
             font-size: 1.1em;
-            border-radius: 8px;
             cursor: pointer;
+            margin-top: 20px;
         }
         button:hover {
-            background: #ff00ff;
+            background: #009966;
             color: #fff;
         }
-        input[type="number"] {
-            padding: 8px;
-            border: 1px solid #00ffaa;
-            background: #1a1a1a;
-            color: #00ffff;
+        .server-stats {
+            margin-top: 30px;
             font-size: 1em;
-            border-radius: 5px;
-            margin: 10px;
-            width: 150px;
-        }
-        @keyframes glow {
-            from { color: #00ffaa; }
-            to { color: #ff00ff; }
+            background: #222;
+            color: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            text-align: left;
         }
     </style>
 </head>
 <body>
     <h1>🖤 Omega Zero – قلعة التخفي</h1>
     <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
-    <div>
-        <input type="number" id="challenge" placeholder="🎯 نسبة التحدي %" />
-        <button onclick="setChallenge()">📌 تحديد التحدي</button>
+    <div class="server-stats" id="serverStats">
+        💻 الأنوية: غير معروفة<br>
+        🚀 السرعة الحالية: غير معروفة<br>
+        📂 RAM: جاري التحميل...<br>
+        📡 الشبكة: جاري التحميل...
     </div>
     <div class="log" id="log">[السجل] بانتظار الاتصال بالقلب...</div>
     <button onclick="connectToCore()">⚡ بدء تشغيل النواة</button>
-    <button onclick="disconnectCore()">🔌 إيقاف النواة</button>
 
     <script>
         let logBox = document.getElementById("log");
         let statusBox = document.getElementById("status");
-        let challengeValue = 0;
-        let speed = 50; // السرعة الافتراضية
+        let serverStatsBox = document.getElementById("serverStats");
         let ws;
-
-        function log(message) {
-            const now = new Date().toLocaleTimeString();
-            logBox.innerHTML += `<div>[${now}] ${message}</div>`;
-            logBox.scrollTop = logBox.scrollHeight;
-        }
-
-        function setChallenge() {
-            challengeValue = document.getElementById("challenge").value;
-            if (challengeValue < 50 || challengeValue > 50000) {
-                log("⚠️ التحدي يجب أن يكون بين 50% و50,000%.");
-                return;
-            }
-            log(`🎯 التحدي الأسبوعي محدد: ${challengeValue}%`);
-        }
 
         function connectToCore() {
             statusBox.textContent = "🔄 الاتصال بالقلب...";
-            log("🔗 جاري الاتصال بالنواة...");
-            ws = new WebSocket("wss://api-demo.fxcm.com:443"); // يمكنك تغيير الرابط لاحقًا
+            simulateServerStats();
 
+            ws = new WebSocket("wss://api-demo.fxcm.com:443"); // استبدل بالرابط الفعلي لاحقًا
             ws.onopen = () => {
                 statusBox.textContent = "✅ متصل بالقلب بنجاح!";
-                log("🖤 النواة متصلة. بدء تحميل خبرة 20 سنة...");
+                log("[🖤] الاتصال بالنواة اكتمل.");
                 simulateAI();
             };
-
             ws.onmessage = (event) => {
-                log(`💬 بيانات من القلب: ${event.data}`);
+                log(`[💬 بيانات]: ${event.data}`);
             };
-
             ws.onerror = (error) => {
                 statusBox.textContent = "❌ خطأ في الاتصال!";
-                log("⚠️ خطأ: " + error);
+                log("[⚠️] خطأ: " + error);
             };
-
             ws.onclose = () => {
                 statusBox.textContent = "🔌 الاتصال مغلق.";
-                log("🕸️ الاتصال مع القلب انتهى.");
+                log("[🕸️] الاتصال مغلق من القلب.");
             };
         }
 
-        function disconnectCore() {
-            if (ws) ws.close();
-            statusBox.textContent = "🛑 النواة متوقفة.";
-            log("🔌 تم إيقاف الاتصال بالقلب.");
+        function log(message) {
+            logBox.innerHTML += `<div>${message}</div>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function simulateServerStats() {
+            const cores = [2, 4, 8, 16, 32];
+            const selectedCores = cores[Math.floor(Math.random() * cores.length)];
+            const speed = selectedCores * 12 + Math.floor(Math.random() * 10); // تقريبية
+            const ramUsed = (Math.random() * 2).toFixed(2);
+            const ramTotal = selectedCores >= 8 ? 16 : 8;
+            const bandwidth = Math.floor(Math.random() * 500);
+
+            serverStatsBox.innerHTML = `
+                💻 الأنوية: ${selectedCores} Cores<br>
+                🚀 السرعة الحالية: ${speed}<br>
+                📂 RAM: ${ramUsed}GB / ${ramTotal}GB<br>
+                📡 الشبكة: ${bandwidth}MB من 1TB
+            `;
         }
 
         function simulateAI() {
-            log(`⚡ السرعة الحالية للنواة: ${speed}`);
+            log("🤖 تحميل خبرة 20 سنة بيانات سابقة...");
             setTimeout(() => {
-                log("🤖 تحليل الفريمات الديناميكية (1 ثانية → ∞)...");
+                log("⚡ تحليل الفريمات الديناميكية (1 ثانية → ∞)...");
                 setTimeout(() => {
-                    const bestFrame = 4; // مثال للفريم الأفضل
-                    log(`✅ الفريم الأمثل لتحقيق التحدي ${challengeValue}% هو: ${bestFrame} ثوانٍ.`);
+                    log(`✅ الفريم الأمثل لتحقيق التحدي هو: 4 ثوانٍ.`);
                     log("🧠 تعديل المؤشرات للأداء الأمثل...");
                     setTimeout(() => {
-                        log("📈 متوسط الأرباح الأسبوعية (رصيد 1,000$): 42,800$");
-                        log("🚀 النظام جاهز لتحديك!");
+                        log("📈 متوسط الأرباح الأسبوعية: 24,500$ على رصيد 1,000$");
+                        log("🚀 النظام جاهز لكسر التحدي المحدد!");
                     }, 2000);
                 }, 2000);
             }, 2000);
