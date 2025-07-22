@@ -1,80 +1,113 @@
 <!DOCTYPE html><html lang="ar">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Omega Zero - وضع المحاكاة</title>
     <style>
         body {
-            background-color: #121212;
-            color: #00f5d4;
-            font-family: monospace;
+            background-color: #0a0a0a;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
             text-align: center;
             direction: rtl;
         }
-        .status {
-            color: #ffd700;
-            margin-top: 10px;
-        }
-        .log {
-            background-color: #1e1e1e;
-            color: #00ff00;
-            margin: 20px auto;
-            padding: 10px;
-            width: 80%;
-            height: 300px;
-            overflow-y: scroll;
+        .container {
+            border: 1px solid #00ffcc;
             border-radius: 10px;
-        }
-        .controls button {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .controls button:hover {
-            background-color: #555;
+            padding: 15px;
+            margin: 20px;
+            background-color: #121212;
         }
         .summary {
-            margin: 15px;
-            color: #00ffea;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .log {
+            text-align: right;
+            background-color: #1a1a1a;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-y: auto;
+            height: 250px;
+            color: #00ff00;
+            font-size: 0.95em;
+        }
+        .button {
+            background-color: #00ffcc;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .button:hover {
+            background-color: #00cc99;
         }
     </style>
 </head>
 <body>
-    <h1>Omega Zero - وضع المحاكاة</h1>
-    <div class="status">✅ انتهت المحاكاة بنجاح</div>
-    <div class="summary">
-        🕒 التاريخ: 21/7/2025<br>
-        💹 الزوج: GBP/JPY<br>
-        🔥 السرعة: محسوبة على 8 نوى<br>
-        💼 الرصيد الابتدائي: 1000$<br>
-        📈 الأرباح الكلية: 865$<br>
-        📊 عدد الصفقات: 54<br>
-    </div>
-    <div class="log" id="log">
-        [03:00] ✅ انفجار | +120$ | الربح التراكمي: 120$<br>
-        [03:04] ⚡ سكالب | +35$ | الربح التراكمي: 155$<br>
-        [03:07] 💥 انفجار | +210$ | الربح التراكمي: 365$<br>
-        [03:11] ⚡ سكالب | -40$ | الربح التراكمي: 325$<br>
-        [03:15] 💥 انفجار | +150$ | الربح التراكمي: 475$<br>
-        [03:20] ⚡ سكالب | +50$ | الربح التراكمي: 525$<br>
-        [03:25] 💥 انفجار | +300$ | الربح التراكمي: 825$<br>
-        [03:31] ⚡ سكالب | +20$ | الربح التراكمي: 845$<br>
-        [03:37] 💥 انفجار | +60$ | الربح التراكمي: 905$<br>
-        ...
-    </div>
-    <div class="controls">
-        <button onclick="startSimulation()">🚀 بدء المحاكاة</button>
-        <button onclick="resetSimulation()">🔄 إعادة تعيين</button>
+    <h1>🌀 Omega Zero - وضع المحاكاة</h1>
+    <div class="container">
+        <div class="summary">
+            <p>📅 التاريخ: 21/7/2025</p>
+            <p>📊 الزوج: GBP/JPY</p>
+            <p>🔥 السرعة: محسوبة على 8 نوى</p>
+            <p>💼 الرصيد الابتدائي: 1000$</p>
+            <p>📈 الأرباح الكلية: <span id="totalProfit">0$</span></p>
+            <p>📊 عدد الصفقات: <span id="totalTrades">0</span></p>
+        </div>
+        <div class="log" id="log">
+            [⚡] تحميل البيانات الكاملة لمدة 24 ساعة...
+        </div>
+        <button class="button" onclick="startSimulation()">🚀 ابدأ المحاكاة</button>
+        <button class="button" onclick="resetSimulation()">🔄 إعادة تعيين</button>
     </div><script>
+    let totalProfit = 0;
+    let totalTrades = 0;
+    let interval;
+
     function startSimulation() {
-        alert("📡 بدأ تحليل بيانات يوم كامل GBP/JPY على سرعة 8 نوى...");
+        document.getElementById('log').innerHTML = '[⚡] بدء المحاكاة...';
+        totalProfit = 0;
+        totalTrades = 0;
+        interval = setInterval(simulateTrade, 500);
     }
+
+    function simulateTrade() {
+        if (totalTrades >= 120) { // افتراضيًا 120 صفقة في اليوم
+            clearInterval(interval);
+            document.getElementById('log').innerHTML += '\n✅ انتهت المحاكاة بنجاح.';
+            return;
+        }
+
+        let type = Math.random() > 0.3 ? 'انفجار' : 'سكالب';
+        let profit = Math.floor(Math.random() * 100) + 20;
+        let direction = Math.random() > 0.5 ? 1 : -1;
+        profit = profit * direction;
+
+        totalProfit += profit;
+        totalTrades++;
+
+        let time = new Date(2025, 6, 21, Math.floor(totalTrades / 5), (totalTrades % 5) * 12).toTimeString().substring(0,5);
+        let logEntry = `[${time}] | ${type} | الربح: ${profit}$ | الربح التراكمي: ${totalProfit}$`;
+
+        let log = document.getElementById('log');
+        log.innerHTML = log.innerHTML + '\n' + logEntry;
+        log.scrollTop = log.scrollHeight;
+
+        document.getElementById('totalProfit').innerText = totalProfit + '$';
+        document.getElementById('totalTrades').innerText = totalTrades;
+    }
+
     function resetSimulation() {
-        document.getElementById('log').innerHTML = "...تمت إعادة تعيين المحاكاة";
+        clearInterval(interval);
+        document.getElementById('log').innerHTML = '[⚡] تم إعادة تعيين المحاكاة...';
+        document.getElementById('totalProfit').innerText = '0$';
+        document.getElementById('totalTrades').innerText = '0';
+        totalProfit = 0;
+        totalTrades = 0;
     }
 </script>
 
