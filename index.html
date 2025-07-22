@@ -1,143 +1,138 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html><html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🖤 Omega Zero – قلعة التخفي</title>
     <style>
         body {
-            background-color: #000;
-            color: #f0f0f0; /* أبيض بارد */
+            background-color: #1a1a1a;
+            color: #e0e0e0;
             font-family: 'Courier New', monospace;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 40px;
         }
         h1 {
-            color: #ccc; /* رمادي بارد */
-            animation: pulse 2s infinite;
+            color: #00ffff;
+            animation: glow 2s infinite alternate;
         }
-        .status {
-            font-size: 1.2em;
-            margin: 20px;
-            color: #00cc99;
+        .status, .metrics {
+            font-size: 1.1em;
+            margin: 15px;
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 280px;
         }
         .log {
             background-color: #111;
             color: #0f0;
             border: 1px solid #333;
-            padding: 15px;
-            margin: 20px auto;
-            width: 80%;
+            padding: 10px;
+            margin: 15px auto;
+            width: 90%;
             height: 200px;
-            overflow-y: scroll;
+            overflow-y: auto;
             text-align: left;
-        }
-        @keyframes pulse {
-            0% { color: #ccc; }
-            50% { color: #00cc99; }
-            100% { color: #ccc; }
+            border-radius: 5px;
         }
         button {
-            background: #00cc99;
+            background: #00ffff;
             color: #000;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 25px;
             font-size: 1.1em;
             cursor: pointer;
-            margin-top: 20px;
+            border-radius: 6px;
+            margin: 10px;
         }
         button:hover {
-            background: #009966;
+            background: #00b3b3;
             color: #fff;
         }
-        .server-stats {
-            margin-top: 30px;
-            font-size: 1em;
-            background: #222;
-            color: #f0f0f0;
-            padding: 10px;
-            border-radius: 8px;
-            display: inline-block;
-            text-align: left;
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #0ff; }
+            to { text-shadow: 0 0 15px #0ff; }
         }
     </style>
 </head>
 <body>
     <h1>🖤 Omega Zero – قلعة التخفي</h1>
     <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
-    <div class="server-stats" id="serverStats">
-        💻 الأنوية: غير معروفة<br>
-        🚀 السرعة الحالية: غير معروفة<br>
-        📂 RAM: جاري التحميل...<br>
-        📡 الشبكة: جاري التحميل...
+    <div class="metrics">
+        🔥 السرعة الحالية: <span id="speed">أوتوماتيكية</span><br>
+        🧠 الأنوية المستخدمة: <span id="cores">8</span><br>
+        📈 الأرباح التراكمية: <span id="profit">0 $</span><br>
+        💥 عدد الانفجارات: <span id="explosions">0</span><br>
+        ⚡ عدد السكالب: <span id="scalps">0</span>
     </div>
-    <div class="log" id="log">[السجل] بانتظار الاتصال بالقلب...</div>
-    <button onclick="connectToCore()">⚡ بدء تشغيل النواة</button>
+    <div class="metrics">
+        🎯 التحدي الأسبوعي: <input type="number" id="challenge" placeholder="% التحدي" style="width:80px;"> 
+        <button onclick="setChallenge()">✅ تسجيل التحدي</button>
+    </div>
+    <div class="log" id="log">[🖤] بانتظار بدء تشغيل النواة...</div>
+    <button onclick="connectToCore()">⚡ بدء تشغيل النواة</button><script>
+    let logBox = document.getElementById("log");
+    let statusBox = document.getElementById("status");
+    let speedBox = document.getElementById("speed");
+    let coresBox = document.getElementById("cores");
+    let profitBox = document.getElementById("profit");
+    let explosionsBox = document.getElementById("explosions");
+    let scalpsBox = document.getElementById("scalps");
+    let challengeValue = 0;
+    let ws;
 
-    <script>
-        let logBox = document.getElementById("log");
-        let statusBox = document.getElementById("status");
-        let serverStatsBox = document.getElementById("serverStats");
-        let ws;
+    function connectToCore() {
+        statusBox.textContent = "🔄 الاتصال بالقلب...";
+        ws = new WebSocket("wss://api-demo.fxcm.com:443"); // رابط API
 
-        function connectToCore() {
-            statusBox.textContent = "🔄 الاتصال بالقلب...";
-            simulateServerStats();
+        ws.onopen = () => {
+            statusBox.textContent = "✅ متصل بالقلب بنجاح!";
+            log("[🖤] النواة تعمل الآن بكامل الذكاء.");
+            simulateAI();
+        };
 
-            ws = new WebSocket("wss://api-demo.fxcm.com:443"); // استبدل بالرابط الفعلي لاحقًا
-            ws.onopen = () => {
-                statusBox.textContent = "✅ متصل بالقلب بنجاح!";
-                log("[🖤] الاتصال بالنواة اكتمل.");
-                simulateAI();
-            };
-            ws.onmessage = (event) => {
-                log(`[💬 بيانات]: ${event.data}`);
-            };
-            ws.onerror = (error) => {
-                statusBox.textContent = "❌ خطأ في الاتصال!";
-                log("[⚠️] خطأ: " + error);
-            };
-            ws.onclose = () => {
-                statusBox.textContent = "🔌 الاتصال مغلق.";
-                log("[🕸️] الاتصال مغلق من القلب.");
-            };
-        }
+        ws.onmessage = (event) => {
+            log(`[💬 بيانات]: ${event.data}`);
+        };
 
-        function log(message) {
-            logBox.innerHTML += `<div>${message}</div>`;
-            logBox.scrollTop = logBox.scrollHeight;
-        }
+        ws.onerror = (error) => {
+            statusBox.textContent = "❌ خطأ في الاتصال!";
+            log("[⚠️] خطأ: " + error);
+        };
 
-        function simulateServerStats() {
-            const cores = [2, 4, 8, 16, 32];
-            const selectedCores = cores[Math.floor(Math.random() * cores.length)];
-            const speed = selectedCores * 12 + Math.floor(Math.random() * 10); // تقريبية
-            const ramUsed = (Math.random() * 2).toFixed(2);
-            const ramTotal = selectedCores >= 8 ? 16 : 8;
-            const bandwidth = Math.floor(Math.random() * 500);
+        ws.onclose = () => {
+            statusBox.textContent = "🔌 الاتصال مغلق.";
+            log("[🕸️] الاتصال بالقلب تم إنهاؤه.");
+        };
+    }
 
-            serverStatsBox.innerHTML = `
-                💻 الأنوية: ${selectedCores} Cores<br>
-                🚀 السرعة الحالية: ${speed}<br>
-                📂 RAM: ${ramUsed}GB / ${ramTotal}GB<br>
-                📡 الشبكة: ${bandwidth}MB من 1TB
-            `;
-        }
+    function setChallenge() {
+        challengeValue = document.getElementById("challenge").value;
+        log(`🎯 التحدي الأسبوعي محدد: ${challengeValue}%`);
+    }
 
-        function simulateAI() {
-            log("🤖 تحميل خبرة 20 سنة بيانات سابقة...");
+    function simulateAI() {
+        log("🤖 تحميل خبرة 20 سنة بيانات سابقة...");
+        setTimeout(() => {
+            log("⚡ تحليل الفريمات الديناميكية (1 ثانية → ∞)...");
+            speedBox.textContent = "أوتوماتيكية";
+            coresBox.textContent = "8";
             setTimeout(() => {
-                log("⚡ تحليل الفريمات الديناميكية (1 ثانية → ∞)...");
-                setTimeout(() => {
-                    log(`✅ الفريم الأمثل لتحقيق التحدي هو: 4 ثوانٍ.`);
-                    log("🧠 تعديل المؤشرات للأداء الأمثل...");
-                    setTimeout(() => {
-                        log("📈 متوسط الأرباح الأسبوعية: 24,500$ على رصيد 1,000$");
-                        log("🚀 النظام جاهز لكسر التحدي المحدد!");
-                    }, 2000);
-                }, 2000);
-            }, 2000);
-        }
-    </script>
+                log(`✅ الفريم الأمثل لتحقيق التحدي ${challengeValue}% هو: 4 ثوانٍ.");
+                profitBox.textContent = "24,500 $";
+                explosionsBox.textContent = "15";
+                scalpsBox.textContent = "28";
+                log("🚀 النظام جاهز لكسر التحدي المحدد!");
+            }, 3000);
+        }, 3000);
+    }
+
+    function log(message) {
+        logBox.innerHTML += `<div>${message}</div>`;
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+</script>
+
 </body>
 </html>
