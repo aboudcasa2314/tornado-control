@@ -4,108 +4,85 @@
   <meta charset="UTF-8" />
   <title>Omega Zero – وضع المحاكاة</title>
   <style>
-    body { background: #121212; color: #eee; font-family: sans-serif; text-align:center; margin:0; padding:20px; }
-    .card { border:1px solid #333; padding:15px; margin:20px auto; max-width:400px; border-radius:8px; }
-    .btn-bar { position: fixed; bottom: 0; left: 0; right:0; display:flex; justify-content: space-around; background:#1e1e1e; padding:10px; }
-    .btn { background:#333; color:#eee; border:none; outline:none; padding:10px; border-radius:50%; width:50px; height:50px; }
-    .btn.active { background:#00aaff; }
-    .log { background:#111; color:#0f0; height:200px; overflow:auto; padding:10px; font-size:14px; text-align:left; }
+    body { background: #121212; color: #eee; font-family: Arial, sans-serif; text-align:center; margin:0; padding:20px; }
+    .card { border:1px solid #444; background:#1c1c1c; padding:15px; margin:20px auto; max-width:400px; border-radius:8px; }
+    .btn { background:#444; color:#fff; border:none; padding:10px 20px; margin:5px; border-radius:5px; cursor:pointer; }
+    .btn:hover { background:#666; }
+    .log { background:#111; color:#0f0; height:200px; overflow:auto; padding:10px; font-size:13px; text-align:left; }
   </style>
 </head>
 <body>
 
-  <h1>Omega Zero – وضع المحاكاة</h1>
+  <h1>Omega Zero – وضع المحاكاة</h1>
   <div class="card">
-    <p>… الحالة : في وضع المحاكاة</p>
-    <div id="stats">
-      <p>عدد الصفقات : <span id="trades">0</span></p>
-      <p>الأرباح : $<span id="profit">0</span></p>
-      <p>السرعة : 🔥 <span id="speed">100</span></p>
+    <p>💠 الحالة: <span id="status">بانتظار بدء المحاكاة...</span></p>
+    <p>📊 عدد الصفقات: <span id="trades">0</span></p>
+    <p>💵 الأرباح الكلية: <span id="profit">0</span> $</p>
+    <p>🔥 السرعة: <span id="speed">100</span></p>
+    <div>
+      <button class="btn" onclick="connect()">اتصال</button>
+      <button class="btn" onclick="startSim()">بدء</button>
+      <button class="btn" onclick="stopSim()">إيقاف</button>
+      <button class="btn" onclick="resetSim()">إعادة</button>
     </div>
-    <div class="log" id="log">…بانتظار بدء المحاكاة</div>
-  </div>
-
-  <div class="btn-bar">
-    <button class="btn" id="btn-connect" title="اتصال">🔌</button>
-    <button class="btn" id="btn-start" title="بدء">▶️</button>
-    <button class="btn" id="btn-stop" title="إيقاف">⏹️</button>
-    <button class="btn" id="btn-reset" title="إعادة">🔄</button>
+    <div class="log" id="log">📥 سجل المحاكاة جاهز...</div>
   </div>
 
   <script>
-    // بيانات GBP/JPY ليوم 21/7/2025
-    const dayData = {
-      open: 198.84,
-      high: 199.50,
-      low: 198.32,
-      close: 198.84
-    };
-
-    let connected = false, running = false;
-    let trades = 0, profit = 0, speed = 100;
+    let connected = false, running = false, trades = 0, profit = 0;
     const logEl = document.getElementById('log');
 
-    // زر التشغيل من المحاكاة
-    document.getElementById('btn-start').onclick = () => {
-      if (!connected) { appendLog('⚠️ يجب أن تكون متصل'); return; }
-      if (running) return;
-      running = true;
-      appendLog('▶️ بدء المحاكاة...');
-      simulateDay(dayData);
-    };
+    const priceData = [198.80, 198.92, 199.12, 198.65, 199.30, 199.10, 198.95, 199.50, 198.40]; // بيانات يوم 21-7-2025
 
-    // زر الإيقاف
-    document.getElementById('btn-stop').onclick = () => {
-      if (!running) return;
-      running = false;
-      appendLog('⏸️ تم إيقاف المحاكاة');
-    };
-
-    // زر إعادة
-    document.getElementById('btn-reset').onclick = () => {
-      running = false;
-      trades = 0; profit = 0;
-      document.getElementById('trades').innerText = trades;
-      document.getElementById('profit').innerText = profit;
-      appendLog('🔄 تم إعادة المحاكاة');
-    };
-
-    // زر الاتصال (محاكاة فقط)
-    document.getElementById('btn-connect').onclick = () => {
+    function connect() {
       connected = true;
-      document.getElementById('btn-connect').classList.add('active');
-      appendLog('✅ اتصال تم (وضع محاكاة)');
-    };
-
-    function appendLog(text) {
-      logEl.innerHTML += text + '\n';
-      logEl.scrollTop = logEl.scrollHeight;
+      document.getElementById('status').innerText = "✅ تم الاتصال بالمحاكاة";
+      appendLog("✅ النظام متصل وجاهز.");
     }
 
-    async function simulateDay(data) {
-      // مثال بطيء للعرض المختصر
-      const candleTimes = ['open','high','low','close'];
+    function startSim() {
+      if (!connected) {
+        appendLog("⚠️ يجب الاتصال أولاً قبل البدء.");
+        return;
+      }
+      if (running) return;
+      running = true;
+      appendLog("▶️ بدء تشغيل المحاكاة...");
+      simulate();
+    }
+
+    function stopSim() {
+      if (!running) return;
+      running = false;
+      appendLog("⏸️ تم إيقاف المحاكاة.");
+    }
+
+    function resetSim() {
+      running = false;
       trades = 0; profit = 0;
       document.getElementById('trades').innerText = trades;
       document.getElementById('profit').innerText = profit;
+      appendLog("🔄 تمت إعادة المحاكاة.");
+    }
 
-      for (let step of candleTimes) {
+    async function simulate() {
+      for (let price of priceData) {
         if (!running) break;
-        await new Promise(r => setTimeout(r, 500));
-        let val = data[step].toFixed(2);
-        appendLog(`📈 شمعة ${step.toUpperCase()} = ${val}`);
-        // نضيف صفقة وهمية إن كانت إشارة
-        if (step==='high' || step==='low') {
-          trades +=1;
-          let gain = (Math.random()*10 - 5).toFixed(2);
-          profit += parseFloat(gain);
-          document.getElementById('trades').innerText = trades;
-          document.getElementById('profit').innerText = profit.toFixed(2);
-          appendLog(`صفقة جديدة #${trades} | الربح: $${gain}`);
-        }
+        await new Promise(r => setTimeout(r, 1000)); // الانتظار ثانية بين كل خطوة
+        let tradeProfit = (Math.random() * 50 - 25).toFixed(2);
+        profit += parseFloat(tradeProfit);
+        trades += 1;
+        document.getElementById('trades').innerText = trades;
+        document.getElementById('profit').innerText = profit.toFixed(2);
+        appendLog(`📈 صفقة جديدة عند السعر ${price} | ربح: ${tradeProfit}$`);
       }
-      if (running) appendLog('✅ انتهت المحاكاة لليوم');
+      if (running) appendLog("✅ انتهت محاكاة اليوم بالكامل.");
       running = false;
+    }
+
+    function appendLog(text) {
+      logEl.innerHTML += text + "<br>";
+      logEl.scrollTop = logEl.scrollHeight;
     }
   </script>
 </body>
