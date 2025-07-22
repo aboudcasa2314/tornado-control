@@ -1,152 +1,138 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>❤️ Omega Zero - قلعة التخفي</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omega Zero - قلعة التخفي</title>
   <style>
     body {
       background-color: #000;
       color: #0ff;
-      font-family: "Courier New", monospace;
+      font-family: 'Courier New', Courier, monospace;
       text-align: center;
       margin: 0;
       padding: 0;
     }
-
     h1 {
-      color: #00ffff;
-      margin-top: 20px;
-      font-size: 2em;
-      text-shadow: 0 0 10px #00ffff;
+      color: #0ff;
+      font-size: 2.2em;
+      margin-top: 30px;
     }
-
     h2 {
       color: #ffcc00;
-      margin-bottom: 10px;
+      font-size: 1.3em;
+      margin: 10px 0;
     }
-
     .status {
-      color: #ffcc00;
+      color: #0f0;
+      font-size: 1.1em;
       margin: 20px 0;
     }
-
     .log-box {
-      background: #111;
+      background-color: #111;
       color: #0f0;
-      border: 1px solid #333;
-      padding: 10px;
-      margin: 20px auto;
-      width: 90%;
+      border: 1px solid #0ff;
+      padding: 15px;
+      width: 80%;
+      margin: 15px auto;
       height: 200px;
       overflow-y: auto;
       border-radius: 10px;
     }
-
-    .buttons-right {
+    .btn-panel {
       position: fixed;
+      top: 50%;
       right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-
-    .buttons-left {
-      position: fixed;
-      left: 10px;
-      top: 50%;
+      gap: 15px;
       transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
-
-    .button {
+    .btn-panel button {
       width: 50px;
       height: 50px;
       border-radius: 50%;
       border: none;
       color: #fff;
-      font-size: 1.2em;
-      box-shadow: 0 0 10px #000;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn-panel button:hover {
+      transform: scale(1.1);
+    }
+    .btn-start { background-color: #007bff; }
+    .btn-stats { background-color: #28a745; }
+    .btn-challenge { background-color: #ffc107; color: #000; }
+    .btn-reset { background-color: #dc3545; }
+    .interaction-panel {
+      position: fixed;
+      top: 50%;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      transform: translateY(-50%);
+    }
+    .interaction-panel button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      color: #fff;
+      font-size: 1.5em;
       cursor: pointer;
     }
-
-    .blue { background-color: #007bff; }
-    .green { background-color: #28a745; }
-    .yellow { background-color: #ffc107; }
-    .red { background-color: #dc3545; }
-    .yes { background-color: #4caf50; }
-    .no { background-color: #f44336; }
-
-    .label {
-      font-size: 0.8em;
-      color: #ccc;
-      margin-bottom: 5px;
-    }
+    .btn-yes { background-color: #28a745; }
+    .btn-no { background-color: #dc3545; }
   </style>
 </head>
 <body>
-  <h1>❤️ Omega Zero - قلعة التخفي</h1>
-  <h2 class="status">🕸️ الحالة: في وضع الانتظار...</h2>
-
-  <div class="log-box" id="log">[💬] بانتظار الأوامر...</div>
-
-  <div class="buttons-right">
-    <div class="label">تشغيل النواة</div>
-    <button class="button blue" onclick="startCore()">⚡</button>
-
-    <div class="label">عرض الإحصائيات</div>
-    <button class="button green" onclick="showStats()">📊</button>
-
-    <div class="label">تسجيل التحدي</div>
-    <button class="button yellow" onclick="setChallenge()">🎯</button>
-
-    <div class="label">إعادة ضبط</div>
-    <button class="button red" onclick="resetSystem()">🔄</button>
-  </div>
-
-  <div class="buttons-left">
-    <div class="label">نعم</div>
-    <button class="button yes" onclick="respondYes()">✔️</button>
-
-    <div class="label">لا</div>
-    <button class="button no" onclick="respondNo()">❌</button>
-  </div>
-
-  <script>
-    const logBox = document.getElementById("log");
+  <h1>Omega Zero - قلعة التخفي</h1>
+  <h2>🕸️ الحالة: في وضع الانتظار...</h2>  <div class="log-box" id="log">[⚡] بانتظار تشغيل النواة...</div>  <div class="btn-panel">
+    <button class="btn-start" onclick="startCore()">⚡</button>
+    <button class="btn-stats" onclick="showStats()">📊</button>
+    <button class="btn-challenge" onclick="setChallenge()">🎯</button>
+    <button class="btn-reset" onclick="resetSystem()">🔄</button>
+  </div>  <div class="interaction-panel">
+    <button class="btn-yes" onclick="approveAction()">✔️</button>
+    <button class="btn-no" onclick="rejectAction()">❌</button>
+  </div>  <script>
+    let logBox = document.getElementById("log");
 
     function log(message) {
-      logBox.innerHTML += `<div>${message}</div>`;
+      const entry = document.createElement("div");
+      entry.textContent = message;
+      logBox.appendChild(entry);
       logBox.scrollTop = logBox.scrollHeight;
     }
 
     function startCore() {
-      log("⚡ [النواة]: تم بدء التشغيل بنجاح!");
+      log("[⚡] جاري تشغيل النواة...");
+      setTimeout(() => log("✅ النواة تعمل بكفاءة عالية."), 2000);
     }
 
     function showStats() {
-      log("📊 [الإحصائيات]: عرض الأرباح والانفجارات...");
+      log("📊 عرض الإحصائيات: الأرباح، الإنفجارات، السكالب...");
     }
 
     function setChallenge() {
-      log("🎯 [التحدي]: تم تسجيل التحدي الأسبوعي.");
+      let percentage = prompt("🎯 أدخل نسبة التحدي الأسبوعي (%):", "1000");
+      if (percentage) {
+        log(`🎯 تم تسجيل التحدي: ${percentage}%`);
+      }
     }
 
     function resetSystem() {
-      log("🔄 [النظام]: إعادة ضبط البيانات...");
+      log("🔄 جاري إعادة ضبط النظام...");
+      setTimeout(() => log("✅ تم إعادة ضبط النظام بنجاح."), 1500);
     }
 
-    function respondYes() {
-      log("✔️ [استجابة]: نعم - تأكيد.");
+    function approveAction() {
+      log("✔️ تم تأكيد الإجراء المقترح.");
     }
 
-    function respondNo() {
-      log("❌ [استجابة]: لا - رفض.");
+    function rejectAction() {
+      log("❌ تم رفض الإجراء المقترح.");
     }
-  </script>
-</body>
+  </script></body>
 </html>
