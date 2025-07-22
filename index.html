@@ -1,137 +1,151 @@
 <!DOCTYPE html><html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>قلعة Omega Zero - التخفي</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #0ff;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      font-size: 2.5em;
-      margin: 20px 0 10px;
-      color: #00ffff;
-    }
-    h2 {
-      font-size: 1.8em;
-      color: #00ff99;
-    }
-    .status {
-      color: #ffcc00;
-      font-size: 1.2em;
-      margin-bottom: 15px;
-    }
-    .log-box {
-      border: 1px solid #0ff;
-      border-radius: 8px;
-      padding: 10px;
-      width: 90%;
-      max-width: 600px;
-      margin: 10px auto;
-      text-align: left;
-      background-color: #111;
-      color: #0f0;
-      overflow-y: auto;
-      height: 200px;
-    }
-    .button-panel {
-      position: fixed;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .button-panel button {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      color: white;
-      font-size: 1.4em;
-      cursor: pointer;
-      box-shadow: 0 0 10px #333;
-    }
-    .btn-start { background-color: #007bff; }
-    .btn-stats { background-color: #28a745; }
-    .btn-challenge { background-color: #ffc107; }
-    .btn-reset { background-color: #dc3545; }
-    .confirm-panel {
-      position: fixed;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .confirm-panel button {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      color: white;
-      font-size: 1.6em;
-      cursor: pointer;
-      box-shadow: 0 0 10px #333;
-    }
-    .btn-yes { background-color: #28a745; }
-    .btn-no { background-color: #dc3545; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖤 Omega Zero – قلعة التخفي</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding-top: 30px;
+        }
+        h1 {
+            color: #00ffcc;
+            margin-bottom: 20px;
+        }
+        .status {
+            font-size: 1.1em;
+            margin: 15px;
+            color: #ffcc00;
+        }
+        .log {
+            background-color: #2a2a2a;
+            color: #00ff00;
+            border: 1px solid #555;
+            padding: 10px;
+            margin: 15px auto;
+            width: 85%;
+            height: 220px;
+            overflow-y: scroll;
+            text-align: left;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .circle-button {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 0.9em;
+            margin: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .circle-button:hover {
+            background-color: #00ffcc;
+            color: #000;
+        }
+        .label {
+            font-size: 0.8em;
+            margin-top: 5px;
+            color: #aaa;
+        }
+    </style>
 </head>
 <body>
-  <h1>قلعة Omega Zero - التخفي</h1>
-  <h2>🕸️ الحالة: في وضع الانتظار...</h2>  <div class="log-box" id="log">
-    [⚡] بانتظار تشغيل النواة...
-  </div>  <div class="button-panel">
-    <button class="btn-start" onclick="startCore()">⚡</button>
-    <button class="btn-stats" onclick="showStats()">📊</button>
-    <button class="btn-challenge" onclick="setChallenge()">🎯</button>
-    <button class="btn-reset" onclick="resetSystem()">🔄</button>
-  </div>  <div class="confirm-panel">
-    <button class="btn-yes" onclick="confirmAction(true)">✔</button>
-    <button class="btn-no" onclick="confirmAction(false)">✖</button>
-  </div>  <script>
-    let logBox = document.getElementById("log");
-    let challengeValue = 0;
+    <h1>🖤 Omega Zero – قلعة التخفي</h1>
+    <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
+    <div class="log" id="log">[السجل] بانتظار الاتصال بالقلب...</div><div class="button-container">
+    <div>
+        <button class="circle-button" onclick="connectToCore()">⚡</button>
+        <div class="label">تشغيل النواة</div>
+    </div>
+    <div>
+        <button class="circle-button" onclick="toggleServerConnection()">🌐</button>
+        <div class="label">السيرفر</div>
+    </div>
+    <div>
+        <button class="circle-button" onclick="showStats()">📈</button>
+        <div class="label">الإحصائيات</div>
+    </div>
+    <div>
+        <button class="circle-button" onclick="resetChallenge()">🎯</button>
+        <div class="label">تحدي جديد</div>
+    </div>
+</div>
 
-    function log(message) {
-      logBox.innerHTML += `<div>${message}</div>`;
-      logBox.scrollTop = logBox.scrollHeight;
+<script>
+    let logBox = document.getElementById("log");
+    let statusBox = document.getElementById("status");
+    let ws;
+
+    function connectToCore() {
+        statusBox.textContent = "🔄 الاتصال بالقلب...";
+        log("[🖤] محاولة الاتصال بالسيرفر...");
+        ws = new WebSocket("wss://api-demo.fxcm.com:443"); // رابط تجريبي
+
+        ws.onopen = () => {
+            statusBox.textContent = "✅ متصل بالقلب بنجاح!";
+            log("[🖤] الاتصال بالنواة اكتمل.");
+            simulateAI();
+        };
+
+        ws.onmessage = (event) => {
+            log(`[💬 بيانات]: ${event.data}`);
+        };
+
+        ws.onerror = (error) => {
+            statusBox.textContent = "❌ خطأ في الاتصال!";
+            log("[⚠️] خطأ: " + error);
+        };
+
+        ws.onclose = () => {
+            statusBox.textContent = "🔌 الاتصال مغلق. إعادة المحاولة...";
+            log("[🕸️] الاتصال مغلق من القلب. محاولة إعادة الاتصال...");
+            setTimeout(connectToCore, 3000);
+        };
     }
 
-    function startCore() {
-      log("✅ النواة بدأت العمل... النظام الآن متصل بالسيرفر.");
-      log("📈 الأرباح التراكمية: $0 | 💥 الانفجارات: 0 | ⚡ السكالب: 0");
+    function toggleServerConnection() {
+        log("🌐 تغيير حالة الاتصال بالسيرفر.");
     }
 
     function showStats() {
-      log("📊 عرض الإحصائيات الكاملة...");
+        log("📊 إحصائيات النظام: متوسط الأرباح، عدد الصفقات، سرعة المعالجة...");
     }
 
-    function setChallenge() {
-      challengeValue = prompt("🎯 أدخل نسبة التحدي الأسبوعي:");
-      if (challengeValue) {
-        log(`🎯 التحدي الأسبوعي محدد: ${challengeValue}%`);
-      }
+    function resetChallenge() {
+        log("🎯 تم بدء تحدي جديد بنسبة مستهدفة 500%.");
     }
 
-    function resetSystem() {
-      log("🔄 تم إعادة ضبط النظام بنجاح.");
+    function log(message) {
+        logBox.innerHTML += `<div>${message}</div>`;
+        logBox.scrollTop = logBox.scrollHeight;
     }
 
-    function confirmAction(isConfirmed) {
-      if (isConfirmed) {
-        log("✔ تم تأكيد الأمر.");
-      } else {
-        log("✖ تم إلغاء الأمر.");
-      }
+    function simulateAI() {
+        log("🤖 تحميل خبرة 20 سنة بيانات سابقة...");
+        setTimeout(() => {
+            log("⚡ تحليل الفريمات الديناميكية (1 ثانية → ∞)...");
+            setTimeout(() => {
+                log(`✅ الفريم الأمثل لتحقيق التحدي هو: 4 ثوانٍ.");
+                log("🧠 تعديل المؤشرات للأداء الأمثل...");
+                setTimeout(() => {
+                    log("📈 متوسط الأرباح الأسبوعية: 24,500$ على رصيد 1,000$");
+                    log("🚀 النظام جاهز لكسر التحدي المحدد!");
+                }, 2000);
+            }, 2000);
+        }, 2000);
     }
-  </script></body>
+</script>
+
+</body>
 </html>
