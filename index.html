@@ -1,121 +1,112 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html>
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🖤 Omega Zero – وضع المحاكاة</title>
-    <style>
-        body {
-            background-color: #111;
-            color: #e0e0e0;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            padding-top: 40px;
-        }
-        h1 {
-            color: #00cccc;
-            margin-bottom: 20px;
-        }
-        .status {
-            font-size: 1.1em;
-            margin: 10px;
-            color: #ffcc00;
-        }
-        .buttons, .info-panel {
-            margin: 15px auto;
-            width: 80%;
-        }
-        button {
-            background: #444;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            margin: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #666;
-        }
-        .log {
-            background-color: #222;
-            border: 1px solid #555;
-            padding: 15px;
-            margin: 10px auto;
-            width: 90%;
-            height: 200px;
-            overflow-y: scroll;
-            text-align: left;
-            color: #00ffcc;
-        }
-        .label {
-            font-size: 0.9em;
-            color: #aaa;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Omega Zero – وضع المحاكاة</title>
+  <style>
+    body { background: #121212; color: #eee; font-family: sans-serif; text-align:center; margin:0; padding:20px; }
+    .card { border:1px solid #333; padding:15px; margin:20px auto; max-width:400px; border-radius:8px; }
+    .btn-bar { position: fixed; bottom: 0; left: 0; right:0; display:flex; justify-content: space-around; background:#1e1e1e; padding:10px; }
+    .btn { background:#333; color:#eee; border:none; outline:none; padding:10px; border-radius:50%; width:50px; height:50px; }
+    .btn.active { background:#00aaff; }
+    .log { background:#111; color:#0f0; height:200px; overflow:auto; padding:10px; font-size:14px; text-align:left; }
+  </style>
 </head>
 <body>
-    <h1>🖤 Omega Zero – وضع المحاكاة</h1>
-    <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
-    <div class="buttons">
-        <button onclick="simulateConnect()">⚡</button>
-        <div class="label">اتصال</div>
-        <button onclick="simulateStart()">▶️</button>
-        <div class="label">بدء</div>
-        <button onclick="simulateStop()">⏹️</button>
-        <div class="label">إيقاف</div>
-        <button onclick="simulateReset()">🔄</button>
-        <div class="label">إعادة</div>
+
+  <h1>Omega Zero – وضع المحاكاة</h1>
+  <div class="card">
+    <p>… الحالة : في وضع المحاكاة</p>
+    <div id="stats">
+      <p>عدد الصفقات : <span id="trades">0</span></p>
+      <p>الأرباح : $<span id="profit">0</span></p>
+      <p>السرعة : 🔥 <span id="speed">100</span></p>
     </div>
-    <div class="info-panel">
-        <p>📊 <b>عدد الصفقات:</b> <span id="trades">0</span></p>
-        <p>💸 <b>الأرباح الكلية:</b> <span id="profit">0</span> $</p>
-        <p>🔥 <b>السرعة:</b> <span id="speed">100</span></p>
-    </div>
-    <div class="log" id="log">[السجل] بانتظار بدء المحاكاة...</div>
-    <script>
-        let trades = 0;
-        let profit = 0;
-        let interval;function log(msg) {
-        let logBox = document.getElementById("log");
-        logBox.innerHTML += `<div>${msg}</div>`;
-        logBox.scrollTop = logBox.scrollHeight;
+    <div class="log" id="log">…بانتظار بدء المحاكاة</div>
+  </div>
+
+  <div class="btn-bar">
+    <button class="btn" id="btn-connect" title="اتصال">🔌</button>
+    <button class="btn" id="btn-start" title="بدء">▶️</button>
+    <button class="btn" id="btn-stop" title="إيقاف">⏹️</button>
+    <button class="btn" id="btn-reset" title="إعادة">🔄</button>
+  </div>
+
+  <script>
+    // بيانات GBP/JPY ليوم 21/7/2025
+    const dayData = {
+      open: 198.84,
+      high: 199.50,
+      low: 198.32,
+      close: 198.84
+    };
+
+    let connected = false, running = false;
+    let trades = 0, profit = 0, speed = 100;
+    const logEl = document.getElementById('log');
+
+    // زر التشغيل من المحاكاة
+    document.getElementById('btn-start').onclick = () => {
+      if (!connected) { appendLog('⚠️ يجب أن تكون متصل'); return; }
+      if (running) return;
+      running = true;
+      appendLog('▶️ بدء المحاكاة...');
+      simulateDay(dayData);
+    };
+
+    // زر الإيقاف
+    document.getElementById('btn-stop').onclick = () => {
+      if (!running) return;
+      running = false;
+      appendLog('⏸️ تم إيقاف المحاكاة');
+    };
+
+    // زر إعادة
+    document.getElementById('btn-reset').onclick = () => {
+      running = false;
+      trades = 0; profit = 0;
+      document.getElementById('trades').innerText = trades;
+      document.getElementById('profit').innerText = profit;
+      appendLog('🔄 تم إعادة المحاكاة');
+    };
+
+    // زر الاتصال (محاكاة فقط)
+    document.getElementById('btn-connect').onclick = () => {
+      connected = true;
+      document.getElementById('btn-connect').classList.add('active');
+      appendLog('✅ اتصال تم (وضع محاكاة)');
+    };
+
+    function appendLog(text) {
+      logEl.innerHTML += text + '\n';
+      logEl.scrollTop = logEl.scrollHeight;
     }
 
-    function simulateConnect() {
-        document.getElementById("status").textContent = "✅ متصل بالسيرفر والمحاكاة!";
-        log("[🖤] تم الاتصال بالمحاكاة.");
-    }
+    async function simulateDay(data) {
+      // مثال بطيء للعرض المختصر
+      const candleTimes = ['open','high','low','close'];
+      trades = 0; profit = 0;
+      document.getElementById('trades').innerText = trades;
+      document.getElementById('profit').innerText = profit;
 
-    function simulateStart() {
-        if (interval) clearInterval(interval);
-        interval = setInterval(() => {
-            trades += Math.floor(Math.random() * 5);
-            profit += Math.floor(Math.random() * 500);
-            document.getElementById("trades").textContent = trades;
-            document.getElementById("profit").textContent = profit;
-            log(`📈 صفقة جديدة | إجمالي الصفقات: ${trades} | الأرباح: ${profit}$`);
-        }, 2000);
-        document.getElementById("status").textContent = "🚀 المحاكاة تعمل...";
+      for (let step of candleTimes) {
+        if (!running) break;
+        await new Promise(r => setTimeout(r, 500));
+        let val = data[step].toFixed(2);
+        appendLog(`📈 شمعة ${step.toUpperCase()} = ${val}`);
+        // نضيف صفقة وهمية إن كانت إشارة
+        if (step==='high' || step==='low') {
+          trades +=1;
+          let gain = (Math.random()*10 - 5).toFixed(2);
+          profit += parseFloat(gain);
+          document.getElementById('trades').innerText = trades;
+          document.getElementById('profit').innerText = profit.toFixed(2);
+          appendLog(`صفقة جديدة #${trades} | الربح: $${gain}`);
+        }
+      }
+      if (running) appendLog('✅ انتهت المحاكاة لليوم');
+      running = false;
     }
-
-    function simulateStop() {
-        clearInterval(interval);
-        document.getElementById("status").textContent = "⏸️ المحاكاة متوقفة.";
-        log("[⏹️] تم إيقاف المحاكاة.");
-    }
-
-    function simulateReset() {
-        clearInterval(interval);
-        trades = 0;
-        profit = 0;
-        document.getElementById("trades").textContent = trades;
-        document.getElementById("profit").textContent = profit;
-        document.getElementById("status").textContent = "🕸️ الحالة: في وضع الانتظار...";
-        log("[🔄] تمت إعادة تعيين المحاكاة.");
-    }
-</script>
-
+  </script>
 </body>
 </html>
