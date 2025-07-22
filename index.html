@@ -1,137 +1,121 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html><html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🖤 Omega Zero – قلعة التخفي</title>
+    <title>🖤 Omega Zero – وضع المحاكاة</title>
     <style>
         body {
             background-color: #111;
             color: #e0e0e0;
             font-family: 'Courier New', monospace;
             text-align: center;
-            padding-top: 30px;
+            padding-top: 40px;
         }
         h1 {
-            color: #00ffff;
+            color: #00cccc;
             margin-bottom: 20px;
         }
         .status {
-            font-size: 1.3em;
+            font-size: 1.1em;
             margin: 10px;
             color: #ffcc00;
         }
-        .log {
-            background-color: #222;
-            color: #0f0;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 10px auto;
-            width: 85%;
-            height: 220px;
-            overflow-y: scroll;
-            text-align: left;
+        .buttons, .info-panel {
+            margin: 15px auto;
+            width: 80%;
         }
-        .buttons {
-            margin-top: 20px;
-        }
-        .button {
+        button {
             background: #444;
             color: #fff;
             border: none;
             border-radius: 50%;
             width: 50px;
             height: 50px;
-            font-size: 1.1em;
             margin: 5px;
+            font-size: 1.1em;
             cursor: pointer;
         }
-        .button:hover {
-            background: #00ffff;
-            color: #000;
+        button:hover {
+            background: #666;
         }
-        .input-field {
-            background: #222;
-            color: #fff;
+        .log {
+            background-color: #222;
             border: 1px solid #555;
-            border-radius: 5px;
-            padding: 5px;
-            width: 200px;
-            margin: 5px;
+            padding: 15px;
+            margin: 10px auto;
+            width: 90%;
+            height: 200px;
+            overflow-y: scroll;
+            text-align: left;
+            color: #00ffcc;
         }
         .label {
-            display: block;
-            margin-top: 10px;
+            font-size: 0.9em;
+            color: #aaa;
         }
     </style>
 </head>
 <body>
-    <h1>🖤 Omega Zero – قلعة التخفي</h1>
+    <h1>🖤 Omega Zero – وضع المحاكاة</h1>
     <div class="status" id="status">🕸️ الحالة: في وضع الانتظار...</div>
-
-    <div>
-        <label class="label">🖤 اسم المستخدم (FXCM)</label>
-        <input class="input-field" id="username" type="text" placeholder="اسم المستخدم">
-        <label class="label">🔒 كلمة المرور (FXCM)</label>
-        <input class="input-field" id="password" type="password" placeholder="كلمة المرور">
-        <label class="label">🌐 السيرفر</label>
-        <input class="input-field" id="server" type="text" placeholder="Real أو Demo">
-        <label class="label">🔗 رابط المضيف</label>
-        <input class="input-field" id="host" type="text" placeholder="www.fxcorporate.com/Hosts.jsp">
-    </div>
-
     <div class="buttons">
-        <button class="button" onclick="connectToServer()">🔌</button>
-        <button class="button" onclick="retryConnection()">🔄</button>
+        <button onclick="simulateConnect()">⚡</button>
+        <div class="label">اتصال</div>
+        <button onclick="simulateStart()">▶️</button>
+        <div class="label">بدء</div>
+        <button onclick="simulateStop()">⏹️</button>
+        <div class="label">إيقاف</div>
+        <button onclick="simulateReset()">🔄</button>
+        <div class="label">إعادة</div>
     </div>
-
-    <div class="log" id="log">[🖤 السجل] بانتظار بدء الاتصال...</div>
-
+    <div class="info-panel">
+        <p>📊 <b>عدد الصفقات:</b> <span id="trades">0</span></p>
+        <p>💸 <b>الأرباح الكلية:</b> <span id="profit">0</span> $</p>
+        <p>🔥 <b>السرعة:</b> <span id="speed">100</span></p>
+    </div>
+    <div class="log" id="log">[السجل] بانتظار بدء المحاكاة...</div>
     <script>
+        let trades = 0;
+        let profit = 0;
+        let interval;function log(msg) {
         let logBox = document.getElementById("log");
-        let statusBox = document.getElementById("status");
-        let retryCount = 0;
+        logBox.innerHTML += `<div>${msg}</div>`;
+        logBox.scrollTop = logBox.scrollHeight;
+    }
 
-        function connectToServer() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const server = document.getElementById("server").value;
-            const host = document.getElementById("host").value;
+    function simulateConnect() {
+        document.getElementById("status").textContent = "✅ متصل بالسيرفر والمحاكاة!";
+        log("[🖤] تم الاتصال بالمحاكاة.");
+    }
 
-            statusBox.textContent = "🔄 جاري الاتصال بالسيرفر و FXCM...";
-            log("[🖤] محاولة الاتصال...");
+    function simulateStart() {
+        if (interval) clearInterval(interval);
+        interval = setInterval(() => {
+            trades += Math.floor(Math.random() * 5);
+            profit += Math.floor(Math.random() * 500);
+            document.getElementById("trades").textContent = trades;
+            document.getElementById("profit").textContent = profit;
+            log(`📈 صفقة جديدة | إجمالي الصفقات: ${trades} | الأرباح: ${profit}$`);
+        }, 2000);
+        document.getElementById("status").textContent = "🚀 المحاكاة تعمل...";
+    }
 
-            setTimeout(() => {
-                if (username && password && server && host) {
-                    statusBox.textContent = "✅ متصل بنجاح!";
-                    log("[✅] تم الاتصال بالسيرفر و FXCM.");
-                    retryCount = 0; // Reset retries
-                } else {
-                    statusBox.textContent = "❌ فشل الاتصال!";
-                    log("[⚠️] تحقق من البيانات المدخلة.");
-                }
-            }, 2000);
-        }
+    function simulateStop() {
+        clearInterval(interval);
+        document.getElementById("status").textContent = "⏸️ المحاكاة متوقفة.";
+        log("[⏹️] تم إيقاف المحاكاة.");
+    }
 
-        function retryConnection() {
-            retryCount++;
-            log(`[🔄] إعادة المحاولة (${retryCount})...`);
-            if (retryCount <= 5) {
-                connectToServer();
-            } else {
-                statusBox.textContent = "❌ الاتصال فشل بعد 5 محاولات.";
-                log("[❌] جميع المحاولات فشلت. الأسباب المحتملة:");
-                log("- 🚫 الإنترنت غير متصل");
-                log("- 🚫 بيانات السيرفر أو FXCM خاطئة");
-                log("- 🚫 السيرفر غير مستجيب مؤقتًا");
-            }
-        }
+    function simulateReset() {
+        clearInterval(interval);
+        trades = 0;
+        profit = 0;
+        document.getElementById("trades").textContent = trades;
+        document.getElementById("profit").textContent = profit;
+        document.getElementById("status").textContent = "🕸️ الحالة: في وضع الانتظار...";
+        log("[🔄] تمت إعادة تعيين المحاكاة.");
+    }
+</script>
 
-        function log(message) {
-            logBox.innerHTML += `<div>${message}</div>`;
-            logBox.scrollTop = logBox.scrollHeight;
-        }
-    </script>
 </body>
 </html>
