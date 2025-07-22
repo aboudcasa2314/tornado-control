@@ -1,119 +1,75 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html><html lang="ar">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🖤 Omega Zero – قلعة التخفي</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omega Zero</title>
     <style>
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #00FFD1;
+            font-family: 'Courier New', Courier, monospace;
             text-align: center;
-            padding-top: 50px;
-        }
-        h1 {
-            color: #00ffe0;
-            animation: glow 2s infinite alternate;
         }
         .status {
-            font-size: 1.2em;
-            margin: 15px;
-            color: #ffd700;
-        }
-        .log {
-            background-color: #1f1f1f;
-            color: #0f0;
-            border: 1px solid #444;
-            padding: 15px;
-            margin: 10px auto;
-            width: 85%;
-            height: 200px;
-            overflow-y: scroll;
-            text-align: left;
-            border-radius: 8px;
+            color: #00FF00;
+            margin: 20px 0;
         }
         .button {
-            background: #333;
-            color: #00ffe0;
-            border: 2px solid #00ffe0;
+            background-color: #00FFD1;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #00CCAA;
+        }
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        .circle-button {
+            background-color: #00FFD1;
             border-radius: 50%;
             width: 50px;
             height: 50px;
-            font-size: 1.5em;
-            margin: 10px;
-            cursor: pointer;
-            transition: background 0.3s, color 0.3s;
-        }
-        .button:hover {
-            background: #00ffe0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
             color: #000;
+            cursor: pointer;
         }
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #00ffe0; }
-            to { text-shadow: 0 0 30px #00ffe0; }
-        }
-        .label {
-            font-size: 0.9em;
-            color: #aaa;
-            margin-top: -8px;
+        .circle-button:hover {
+            background-color: #00CCAA;
         }
     </style>
 </head>
 <body>
-    <h1>🖤 Omega Zero – قلعة التخفي</h1>
-    <div class="status" id="status">🕸️ الحالة: في وضع الاستعداد...</div>
-    <div class="log" id="log">[السجل] النظام جاهز للاتصال بالسيرفر و FXCM...</div>
+    <div class="top-buttons">
+        <div class="circle-button">🔒</div>
+        <div class="circle-button">⚙️</div>
+    </div><h1>Omega Zero</h1>
 
-    <!-- أزرار التحكم -->
-    <div>
-        <button class="button" onclick="connectServer()">S</button>
-        <div class="label">الاتصال بالسيرفر</div>
+<div class="status">
+    🟢 النظام جاهز للاتصال بالسيرفر و FXCM
+</div>
 
-        <button class="button" onclick="connectBroker()">B</button>
-        <div class="label">الاتصال بـ FXCM</div>
+<div class="status">
+    ✅ الاتصال بالسيرفر اكتمل.<br>
+    ✅ الاتصال بالوسيط اكتمل.<br>
+    🔥 القلب بدأ العمل والتحليل...<br>
+    ⛔ القلب توقف عن العمل.
+</div>
 
-        <button class="button" onclick="startCore()">⚡</button>
-        <div class="label">تشغيل القلب</div>
+<button class="button">الاتصال بالسيرفر</button><br>
+<button class="button">الاتصال بـ FXCM</button><br>
+<button class="button">تشغيل القلب</button><br>
+<button class="button">إيقاف القلب</button>
 
-        <button class="button" onclick="stopCore()">⛔</button>
-        <div class="label">إيقاف القلب</div>
-    </div>
-
-    <script>
-        let logBox = document.getElementById("log");
-        let statusBox = document.getElementById("status");
-
-        function log(message) {
-            logBox.innerHTML += `<div>${message}</div>`;
-            logBox.scrollTop = logBox.scrollHeight;
-        }
-
-        function connectServer() {
-            statusBox.textContent = "🔄 جاري الاتصال بالسيرفر...";
-            setTimeout(() => {
-                statusBox.textContent = "✅ تم الاتصال بالسيرفر بنجاح.";
-                log("[🖤] الاتصال بالسيرفر اكتمل.");
-            }, 1500);
-        }
-
-        function connectBroker() {
-            statusBox.textContent = "🔄 جاري الاتصال بـ FXCM...";
-            setTimeout(() => {
-                statusBox.textContent = "✅ تم الاتصال بـ FXCM بنجاح.";
-                log("[🖤] الاتصال بالوسيط اكتمل.");
-            }, 2000);
-        }
-
-        function startCore() {
-            statusBox.textContent = "⚡ القلب قيد التشغيل...";
-            log("[🔥] القلب بدأ العمل والتحليل...");
-        }
-
-        function stopCore() {
-            statusBox.textContent = "⛔ تم إيقاف القلب.";
-            log("[🛑] القلب توقف عن العمل.");
-        }
-    </script>
 </body>
 </html>
