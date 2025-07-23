@@ -6,54 +6,59 @@
   <style>
     body {
       background-color: #000;
-      color: #00f5d4;
+      color: #ccc;
       font-family: monospace;
       text-align: center;
     }
     .button {
-      background-color: #888;
+      background-color: #555;
       border: none;
-      color: black;
-      padding: 15px 30px;
-      margin: 10px;
-      font-size: 18px;
-      border-radius: 8px;
+      color: white;
+      padding: 12px 25px;
+      margin: 8px;
+      font-size: 16px;
+      border-radius: 50px;
       cursor: pointer;
     }
     .button:hover {
-      background-color: #aaa;
+      background-color: #777;
     }
     .status {
       margin: 20px;
       color: #0f0;
+      font-size: 18px;
     }
     .container {
-      margin-top: 50px;
+      margin-top: 30px;
     }
     input[type=text], input[type=password] {
       width: 80%;
-      padding: 12px;
-      margin: 10px;
-      border-radius: 6px;
-      border: 1px solid #00f5d4;
+      padding: 10px;
+      margin: 8px;
+      border-radius: 20px;
+      border: 1px solid #888;
       background: #222;
-      color: #00f5d4;
+      color: #ccc;
       text-align: center;
     }
     .top-buttons {
       display: flex;
       justify-content: space-between;
-      padding: 0 20px;
+      padding: 10px 20px;
     }
     .icon-button {
-      background-color: #00f5d4;
+      background-color: #444;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      font-size: 18px;
+    }
+    .icon-button:hover {
+      background-color: #666;
     }
   </style>
 </head>
@@ -63,38 +68,68 @@
     <div class="icon-button" onclick="toggleLock()">🔒</div>
   </div>
   <h1>Omega Zero</h1>
-  <div class="status" id="status">💥 النظام جاهز للعمل</div>  <div class="container">
-    <input type="text" id="username" placeholder="اسم المستخدم (FXCM)">
-    <input type="password" id="password" placeholder="كلمة المرور (FXCM)">
-    <input type="text" id="server" placeholder="السيرفر">
-    <input type="text" id="host" placeholder="رابط المضيف"><button class="button" onclick="connectServer()">الاتصال بالسيرفر</button>
-<button class="button" onclick="connectFXCM()">الاتصال بـ FXCM</button>
-<button class="button" onclick="startCore()">تشغيل القلب</button>
-<button class="button" onclick="stopCore()">إيقاف القلب</button>
-
-  </div>  <script>
+  <div class="status" id="status">💥 النظام جاهز للاتصال والعمل</div>
+  <div class="container">
+    <input type="text" id="serverIP" placeholder="IP السيرفر">
+    <input type="text" id="serverUser" placeholder="اسم مستخدم السيرفر">
+    <input type="password" id="serverPass" placeholder="كلمة مرور السيرفر">
+    <input type="text" id="fxcmUser" placeholder="اسم مستخدم FXCM">
+    <input type="password" id="fxcmPass" placeholder="كلمة مرور FXCM">
+    <button class="button" onclick="connectServer()">الاتصال بالسيرفر</button>
+    <button class="button" onclick="connectFXCM()">الاتصال بـ FXCM</button>
+    <button class="button" onclick="startCore()">🚀 تشغيل القلب</button>
+    <button class="button" onclick="stopCore()">⛔ إيقاف القلب</button>
+    <button class="button" onclick="emergencyShutdown()">💣 إغلاق طارئ</button>
+  </div>
+  <script>
     function connectServer() {
-      document.getElementById('status').innerText = '✅ الاتصال بالسيرفر اكتمل';
-    }
+      let ip = document.getElementById('serverIP').value;
+      let user = document.getElementById('serverUser').value;
+      let pass = document.getElementById('serverPass').value;
+      document.getElementById('status').innerText = `✅ متصل بالسيرفر: ${ip}`;
+      localStorage.setItem('serverData', JSON.stringify({ip, user, pass}));
+    }function connectFXCM() {
+  let user = document.getElementById('fxcmUser').value;
+  let pass = document.getElementById('fxcmPass').value;
+  document.getElementById('status').innerText = `✅ متصل بـ FXCM: ${user}`;
+  localStorage.setItem('fxcmData', JSON.stringify({user, pass}));
+}
 
-    function connectFXCM() {
-      document.getElementById('status').innerText = '✅ الاتصال بـ FXCM اكتمل';
-    }
+function startCore() {
+  document.getElementById('status').innerText = '🔥 القلب بدأ التحليل وتشغيل النظام';
+}
 
-    function startCore() {
-      document.getElementById('status').innerText = '🔥 القلب بدأ العمل والتحليل في الخلفية';
-    }
+function stopCore() {
+  document.getElementById('status').innerText = '⛔️ تم إيقاف القلب';
+}
 
-    function stopCore() {
-      document.getElementById('status').innerText = '⛔️ تم إيقاف القلب';
-    }
+function openSettings() {
+  alert('🛠️ الإعدادات جاهزة للتعديل');
+}
 
-    function openSettings() {
-      alert('🛠️ إعدادات المدخلات جاهزة للتعديل');
-    }
+function toggleLock() {
+  alert('🔒 تم تفعيل الحماية الكاملة');
+}
 
-    function toggleLock() {
-      alert('🔒 الحماية مفعلة: الوصول محدود');
-    }
-  </script></body>
+function emergencyShutdown() {
+  alert('💣 القلب أغلق نفسه بالكامل للتخفي التام');
+  document.getElementById('status').innerText = '💤 القلب غير نشط (تخفي كامل)';
+}
+
+window.onload = function() {
+  let serverData = JSON.parse(localStorage.getItem('serverData'));
+  let fxcmData = JSON.parse(localStorage.getItem('fxcmData'));
+  if(serverData) {
+    document.getElementById('serverIP').value = serverData.ip;
+    document.getElementById('serverUser').value = serverData.user;
+    document.getElementById('serverPass').value = serverData.pass;
+  }
+  if(fxcmData) {
+    document.getElementById('fxcmUser').value = fxcmData.user;
+    document.getElementById('fxcmPass').value = fxcmData.pass;
+  }
+}
+
+  </script>
+</body>
 </html>
