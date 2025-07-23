@@ -6,130 +6,142 @@
   <style>
     body {
       background-color: #000;
-      color: #ccc;
+      color: #00f5d4;
       font-family: monospace;
       text-align: center;
     }
     .button {
-      background-color: #555;
+      background-color: #888;
       border: none;
-      color: white;
-      padding: 12px 25px;
-      margin: 8px;
-      font-size: 16px;
-      border-radius: 50px;
+      color: black;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 8px;
       cursor: pointer;
     }
     .button:hover {
-      background-color: #777;
+      background-color: #aaa;
     }
     .status {
       margin: 20px;
       color: #0f0;
-      font-size: 18px;
     }
     .container {
-      margin-top: 30px;
+      margin-top: 50px;
     }
     input[type=text], input[type=password] {
       width: 80%;
-      padding: 10px;
-      margin: 8px;
-      border-radius: 20px;
-      border: 1px solid #888;
+      padding: 12px;
+      margin: 10px;
+      border-radius: 6px;
+      border: 1px solid #00f5d4;
       background: #222;
-      color: #ccc;
+      color: #00f5d4;
       text-align: center;
     }
-    .top-buttons {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 20px;
-    }
     .icon-button {
-      background-color: #444;
+      background-color: #00f5d4;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      font-size: 18px;
+      position: fixed;
+      top: 10px;
     }
-    .icon-button:hover {
-      background-color: #666;
+    .lock-icon {
+      right: 10px;
+    }
+    .settings-icon {
+      left: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="top-buttons">
-    <div class="icon-button" onclick="openSettings()">⚙️</div>
-    <div class="icon-button" onclick="toggleLock()">🔒</div>
-  </div>
+  <div class="icon-button settings-icon" onclick="openSettings()">⚙️</div>
+  <div class="icon-button lock-icon" onclick="toggleLock()">🔒</div>
   <h1>Omega Zero</h1>
   <div class="status" id="status">💥 النظام جاهز للاتصال والعمل</div>
   <div class="container">
-    <input type="text" id="serverIP" placeholder="IP السيرفر">
+    <input type="text" id="serverIP" placeholder="السيرفر IP">
     <input type="text" id="serverUser" placeholder="اسم مستخدم السيرفر">
     <input type="password" id="serverPass" placeholder="كلمة مرور السيرفر">
-    <input type="text" id="fxcmUser" placeholder="اسم مستخدم FXCM">
-    <input type="password" id="fxcmPass" placeholder="كلمة مرور FXCM">
-    <button class="button" onclick="connectServer()">الاتصال بالسيرفر</button>
-    <button class="button" onclick="connectFXCM()">الاتصال بـ FXCM</button>
-    <button class="button" onclick="startCore()">🚀 تشغيل القلب</button>
-    <button class="button" onclick="stopCore()">⛔ إيقاف القلب</button>
-    <button class="button" onclick="emergencyShutdown()">💣 إغلاق طارئ</button>
-  </div>
-  <script>
+    <input type="text" id="fxcmUser" placeholder="FXCM اسم مستخدم">
+    <input type="password" id="fxcmPass" placeholder="FXCM كلمة مرور"><button class="button" onclick="connectServer()">الاتصال بالسيرفر</button>
+<button class="button" onclick="connectFXCM()">الاتصال بـ FXCM</button>
+<button class="button" onclick="startCore()">🚀 تشغيل القلب</button>
+<button class="button" onclick="stopCore()">⛔️ إيقاف القلب</button>
+<button class="button" onclick="emergencyShutdown()">💣 إغلاق طارئ</button>
+
+  </div>  <script>
+    // حفظ البيانات تلقائياً في التخزين المحلي
+    function saveSettings() {
+      localStorage.setItem('serverIP', document.getElementById('serverIP').value);
+      localStorage.setItem('serverUser', document.getElementById('serverUser').value);
+      localStorage.setItem('serverPass', document.getElementById('serverPass').value);
+      localStorage.setItem('fxcmUser', document.getElementById('fxcmUser').value);
+      localStorage.setItem('fxcmPass', document.getElementById('fxcmPass').value);
+    }
+
+    // تحميل البيانات المحفوظة عند تشغيل الصفحة
+    window.onload = function() {
+      if(localStorage.getItem('serverIP')){
+        document.getElementById('serverIP').value = localStorage.getItem('serverIP');
+        document.getElementById('serverUser').value = localStorage.getItem('serverUser');
+        document.getElementById('serverPass').value = localStorage.getItem('serverPass');
+        document.getElementById('fxcmUser').value = localStorage.getItem('fxcmUser');
+        document.getElementById('fxcmPass').value = localStorage.getItem('fxcmPass');
+        reconnectAutomatically();
+      }
+    }
+
+    // الاتصال بالسيرفر
     function connectServer() {
-      let ip = document.getElementById('serverIP').value;
-      let user = document.getElementById('serverUser').value;
-      let pass = document.getElementById('serverPass').value;
-      document.getElementById('status').innerText = `✅ متصل بالسيرفر: ${ip}`;
-      localStorage.setItem('serverData', JSON.stringify({ip, user, pass}));
-    }function connectFXCM() {
-  let user = document.getElementById('fxcmUser').value;
-  let pass = document.getElementById('fxcmPass').value;
-  document.getElementById('status').innerText = `✅ متصل بـ FXCM: ${user}`;
-  localStorage.setItem('fxcmData', JSON.stringify({user, pass}));
-}
+      saveSettings();
+      document.getElementById('status').innerText = '✅ الاتصال بالسيرفر اكتمل';
+      reconnectAutomatically();
+    }
 
-function startCore() {
-  document.getElementById('status').innerText = '🔥 القلب بدأ التحليل وتشغيل النظام';
-}
+    // الاتصال بـ FXCM
+    function connectFXCM() {
+      saveSettings();
+      document.getElementById('status').innerText = '✅ الاتصال بـ FXCM اكتمل';
+    }
 
-function stopCore() {
-  document.getElementById('status').innerText = '⛔️ تم إيقاف القلب';
-}
+    // تشغيل القلب
+    function startCore() {
+      document.getElementById('status').innerText = '🔥 القلب بدأ العمل والتحليل بكامل الطاقة';
+    }
 
-function openSettings() {
-  alert('🛠️ الإعدادات جاهزة للتعديل');
-}
+    // إيقاف القلب
+    function stopCore() {
+      document.getElementById('status').innerText = '⛔️ تم إيقاف القلب مؤقتاً';
+    }
 
-function toggleLock() {
-  alert('🔒 تم تفعيل الحماية الكاملة');
-}
+    // إغلاق طارئ
+    function emergencyShutdown() {
+      document.getElementById('status').innerText = '💣 النظام متوقف بالكامل - الطوارئ';
+      alert('تم إيقاف جميع العمليات لأسباب أمنية');
+    }
 
-function emergencyShutdown() {
-  alert('💣 القلب أغلق نفسه بالكامل للتخفي التام');
-  document.getElementById('status').innerText = '💤 القلب غير نشط (تخفي كامل)';
-}
+    // إعدادات
+    function openSettings() {
+      alert('🛠️ يمكنك تعديل الإعدادات وتغيير بيانات السيرفر و FXCM في أي وقت');
+    }
 
-window.onload = function() {
-  let serverData = JSON.parse(localStorage.getItem('serverData'));
-  let fxcmData = JSON.parse(localStorage.getItem('fxcmData'));
-  if(serverData) {
-    document.getElementById('serverIP').value = serverData.ip;
-    document.getElementById('serverUser').value = serverData.user;
-    document.getElementById('serverPass').value = serverData.pass;
-  }
-  if(fxcmData) {
-    document.getElementById('fxcmUser').value = fxcmData.user;
-    document.getElementById('fxcmPass').value = fxcmData.pass;
-  }
-}
+    function toggleLock() {
+      alert('🔒 الحماية مفعلة: الوصول الآن محدود');
+    }
 
-  </script>
-</body>
+    // إعادة الاتصال التلقائي إذا انقطع
+    function reconnectAutomatically() {
+      setInterval(() => {
+        console.log('🔄 التحقق من الاتصال...');
+        // هنا برمج إعادة الاتصال التلقائي إذا كان مفصول
+      }, 5000);
+    }
+  </script></body>
 </html>
